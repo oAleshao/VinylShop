@@ -1,0 +1,716 @@
+﻿<Window x:Class="VinylShop.View.AdminWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VinylShop.View"
+        mc:Ignorable="d"
+        Title="Vinyl" Height="650" Width="900"
+        Icon="/Logo/LogoWithoutText.png"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="265"></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <!--Панелька слева для пользовательского использования-->
+            <StackPanel Grid.Row="0" Grid.RowSpan="10" Background="#B165D4">
+                <TextBlock Margin="0 10 0 0" FontWeight="Bold" Text="Окно редактирования" TextAlignment="Center" FontSize="17"></TextBlock>
+                <TextBlock Margin="10" x:Name="TextBlockNameForAdmin"></TextBlock>
+            </StackPanel>
+
+
+            <GroupBox Grid.Row="0" Margin="0 40 0 0" Background="#B165D4">
+                <StackPanel Background="#B165D4" >
+
+                    <RadioButton x:Name="AdderCheckBox" Margin="10" Checked="CheckBox_Checked" FontWeight="Bold">Добавление</RadioButton>
+                    <ComboBox x:Name="ComboBoxAdd" Width="100" materialDesign:HintAssist.Hint="Довавить" SelectionChanged="ComboBoxAdd_Selected"></ComboBox>
+
+                    <RadioButton x:Name="EditMusicRecord" Margin="10" Checked="CheckBox_Checked" FontWeight="Bold">Редактирование</RadioButton>
+                    <ComboBox x:Name="ComboBoxEdit" Width="100" materialDesign:HintAssist.Hint="Редактировать" SelectionChanged="ComboBoxEdit_SelectionChanged"></ComboBox>
+
+                    <RadioButton x:Name="DelMusicRecord" Margin="10" Checked="CheckBox_Checked" FontWeight="Bold">Удаление</RadioButton>
+                    <ComboBox x:Name="ComboBoxDel" Width="100" materialDesign:HintAssist.Hint="Удалить" SelectionChanged="ComboBoxDel_SelectionChanged"></ComboBox>
+
+                </StackPanel>
+
+
+            </GroupBox>
+
+            <StackPanel Grid.Row="2">
+                <TextBlock x:Name="AdminNameTextBox" Margin="10 20 0 0" FontWeight="Bold">Name</TextBlock>
+                <TextBlock HorizontalAlignment="Left" x:Name="SettingsAdmin" Margin="40 10 0 0" Style="{StaticResource TextBlockMouseEnter}" Width="70" MouseDown="SettingsAdmin_MouseDown">Настройки</TextBlock>
+                <TextBlock HorizontalAlignment="Left" x:Name="CloseWindow" Margin="40 10 0 0" MouseDown="CloseWindow_MouseDown" Style="{StaticResource TextBlockMouseEnter}" Width="120">Выйти с редактора</TextBlock>
+            </StackPanel>
+
+            <StackPanel Grid.Row="3">
+                <Border Margin="0 20">
+                    <Image>
+                        <Image.Source>
+                            <BitmapImage UriSource="/Logo/шестеренка-removebg-preview.png"></BitmapImage>
+                        </Image.Source>
+                    </Image>
+                </Border>
+            </StackPanel>
+
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="41*"/>
+                <ColumnDefinition Width="29*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <!--Строка поиска-->
+            <StackPanel Grid.Row="0" Grid.ColumnSpan="2" >
+                <TextBox Width="650" Margin="10" materialDesign:HintAssist.Hint="Поиск" Style="{StaticResource MaterialDesignFilledTextBox}"></TextBox>
+            </StackPanel>
+
+
+            <!--Задний фон-->
+            <StackPanel Grid.Row="1" x:Name="BackgroundFone" Grid.ColumnSpan="2">
+                <Image Height="450">
+                    <Image.Source>
+                        <BitmapImage UriSource="/Logo/LogoLightGray1.png"></BitmapImage>
+                    </Image.Source>
+                </Image>
+            </StackPanel>
+
+
+            <!--Добавление пластинок-->
+            <StackPanel x:Name="AddMusicRecordStackPanel" Grid.Row="1" Height="570" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,0,0,-16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <TextBlock TextAlignment="Center" FontWeight="Bold">Добавление музыкальной пластинки</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Margin="10">
+                        <TextBox x:Name="NameRecord" Width="200"  materialDesign:HintAssist.Hint="Название пластинки"></TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Margin="10">
+                        <TextBox x:Name="YearRecord" Width="200"  materialDesign:HintAssist.Hint="Год"></TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Margin="10">
+                        <TextBox x:Name="DescriptionRecord" Width="200"  materialDesign:HintAssist.Hint="Описание"></TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Margin="10">
+                        <ComboBox Name="ComboBoxPublishHouse" Width="200"  materialDesign:HintAssist.Hint="Издательство"></ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="4" HorizontalAlignment="Center">
+                        <TextBlock Margin="10" FontWeight="Bold" TextAlignment="Center">Песни</TextBlock>
+                        <ListBox x:Name="SongsListBoxForRecords" Width="300" Height="280" ScrollViewer.CanContentScroll="True"
+                                 Style="{StaticResource MaterialDesignNavigationPrimaryListBox }">
+                        </ListBox>
+                        <TextBlock Style="{StaticResource TextBlockMouseEnter}" TextAlignment="Center" Text="Добавить трек" Width="90"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="5">
+                        <TextBox materialDesign:HintAssist.Hint="Кол-во треков"  Width="200" IsReadOnly="True"></TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="6" Grid.Column="1">
+                        <TextBlock Text="Сохранить" TextAlignment="Center" Margin="35" Width="65" Style="{StaticResource TextBlockMouseEnter }"></TextBlock>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+
+            <!--Добавления Треков-->
+            <StackPanel x:Name="AddSongStackPanel" Grid.Row="1" Height="570" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,0,0,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="10">
+                        <TextBlock TextAlignment="Center" FontWeight="Bold">Добавление песен</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Margin="10">
+                        <TextBox x:Name="NameSong" materialDesign:HintAssist.Hint="Название трека" Width="200"></TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Margin="10">
+                        <ComboBox Width="200"  materialDesign:HintAssist.Hint="Исполнитель"></ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="1">
+                        <TextBlock Text="Сохранить" TextAlignment="Center" Width="65" Style="{StaticResource TextBlockMouseEnter }"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Margin="10">
+                        <ComboBox Width="200"  materialDesign:HintAssist.Hint="Жанр"></ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+                        <TextBlock FontWeight="Bold" TextAlignment="Center">Все песни</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
+                        <ListBox x:Name="SongListBox" Style="{StaticResource MaterialDesignNavigationPrimaryListBox }" 
+                                 Width="650" Height="330"></ListBox>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+
+            <!--Добавление Жанра-->
+            <StackPanel x:Name="AddGanreStackPanel" Grid.Row="1" Visibility="Hidden" Grid.ColumnSpan="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="10">
+                        <TextBlock TextAlignment="Center" FontWeight="Bold">Добавление жанра трека</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="10">
+                        <TextBlock TextAlignment="Center" Text="Добавить" Style="{StaticResource TextBlockMouseEnter}" Width="70"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Margin="10">
+                        <TextBox x:Name="NameGanre" materialDesign:HintAssist.Hint="Название жанра" Width="200"></TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+                        <TextBlock FontWeight="Bold" TextAlignment="Center">Все жанры</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
+                        <ListBox x:Name="GanreListBox" Style="{StaticResource MaterialDesignNavigationPrimaryListBox }" 
+                                 Width="650" Height="330"></ListBox>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+
+            <!--Добавления Издательства-->
+            <StackPanel x:Name="AddPublishHouseStackPanel" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="10">
+                        <TextBlock TextAlignment="Center" FontWeight="Bold">Добавление издательства</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="10">
+                        <TextBlock TextAlignment="Center" Text="Добавить" Style="{StaticResource TextBlockMouseEnter}" Width="70"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Margin="10">
+                        <TextBox x:Name="NamePublishHouse" materialDesign:HintAssist.Hint="Название издательства" Width="200"></TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+                        <TextBlock FontWeight="Bold" TextAlignment="Center">Все издательства</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
+                        <ListBox x:Name="PublishHouseListBox" Style="{StaticResource MaterialDesignNavigationPrimaryListBox }" 
+                                 Width="650" Height="330"></ListBox>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+
+            <!--Добавление Исполнителя-->
+            <StackPanel x:Name="AddExecutorStackPanel" Grid.Row="1" Grid.ColumnSpan="2" Visibility="Hidden">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="10">
+                        <TextBlock TextAlignment="Center" FontWeight="Bold">Добавление исполнителя трека</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="10">
+                        <TextBlock TextAlignment="Center" Text="Добавить" Style="{StaticResource TextBlockMouseEnter}" Width="70"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Margin="10">
+                        <TextBox x:Name="NameExecutor" materialDesign:HintAssist.Hint="Имя исполнителя" Width="200"></TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+                        <TextBlock FontWeight="Bold" TextAlignment="Center">Все исполнители</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
+                        <ListBox x:Name="ExecutorsListBox" Style="{StaticResource MaterialDesignNavigationPrimaryListBox }" 
+                                 Width="650" Height="330"></ListBox>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+            
+             <!--Редактирование пластинки-->
+            <StackPanel x:Name="EditMusicRecordStackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Hidden">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <ListBox x:Name="AllMusicRecords" Width="500" Height="100" Style="{StaticResource MaterialDesignListBox}">
+
+                        </ListBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                        <TextBlock TextAlignment="Center" FontWeight="Bold">Редактирование музыкальной пластинки</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Margin="10">
+                        <TextBox x:Name="NameRecordEdit" Width="200"  materialDesign:HintAssist.Hint="Название пластинки"></TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Margin="10">
+                        <TextBox x:Name="YearRecordEdit" Width="200"  materialDesign:HintAssist.Hint="Год"></TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Margin="10">
+                        <TextBox x:Name="DescriptionRecordEdit" Width="200"  materialDesign:HintAssist.Hint="Описание"></TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="5" Margin="10">
+                        <ComboBox Name="ComboBoxPublishHouseEdit" Width="200"  materialDesign:HintAssist.Hint="Издательство"></ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" HorizontalAlignment="Center">
+                        <TextBlock Margin="10" FontWeight="Bold" TextAlignment="Center">Песни</TextBlock>
+                        <ListBox x:Name="SongsListBoxForRecordsEdit" Width="300" Height="280" ScrollViewer.CanContentScroll="True"
+                                 Style="{StaticResource MaterialDesignNavigationPrimaryListBox }">
+                        </ListBox>
+                        <CheckBox x:Name="CheckBoxEditSongs" Checked="CheckBoxEditSongs_IsEnabledChanged" Unchecked="CheckBoxEditSongs_IsEnabledChanged_1">Редактировать песни</CheckBox>
+                    </StackPanel>
+                    <StackPanel x:Name="AddOrDelStackPanel" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource TextBlockMouseEnter}" TextAlignment="Center" Text="Добавить трек" Width="90" Margin="30 0 0 0"></TextBlock>
+                        <TextBlock Margin="7 0 0 0">/</TextBlock>
+                        <TextBlock Style="{StaticResource TextBlockMouseEnter}" TextAlignment="Center" Text="Удалить трек" Width="90" Margin="7 0 0 0"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="6">
+                        <TextBox materialDesign:HintAssist.Hint="Кол-во треков"  Width="200" IsReadOnly="True"></TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="7" Grid.Column="1">
+                        <TextBlock Text="Сохранить" TextAlignment="Center" Margin="35" Width="65" Style="{StaticResource TextBlockMouseEnter }"></TextBlock>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+
+            <!--Редактирование треков-->
+            <StackPanel x:Name="EditSongsStackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Hidden">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <ListBox x:Name="AllSongsListBoxEdit" Width="500" Height="250" Style="{StaticResource MaterialDesignListBox}">
+
+                        </ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="10">
+                        <TextBlock TextAlignment="Center" FontWeight="Bold">Редактирование песен</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Margin="10">
+                        <TextBox x:Name="NaeSong" materialDesign:HintAssist.Hint="Название трека" Width="200"></TextBox>
+                    </StackPanel>
+
+                    <!--ТекстБоксы-->
+                    <StackPanel x:Name="TextBoxExecutorStackPanel" Grid.Row="3" Margin="10">
+                        <TextBox Width="200"  materialDesign:HintAssist.Hint="Исполнитель"></TextBox>
+                    </StackPanel>
+                    <StackPanel x:Name="TextBoxGanreStackPanel" Grid.Row="5" Margin="10">
+                        <TextBox Width="200"  materialDesign:HintAssist.Hint="Жанр"></TextBox>
+                    </StackPanel>
+                    <!--КобмоБоксы-->
+                    <StackPanel x:Name="ComboBoxExecutorStackPanel" Grid.Row="3" Margin="10">
+                        <ComboBox Width="200"  materialDesign:HintAssist.Hint="Исполнитель"></ComboBox>
+                    </StackPanel>
+                    <StackPanel x:Name="ComboBoxGanreStackPanel" Grid.Row="5" Margin="10">
+                        <ComboBox Width="200"  materialDesign:HintAssist.Hint="Жанр"></ComboBox>
+                    </StackPanel>
+                    
+                    <!--Чек боксы для изменения ТекстБоксов на КомбоБоксы-->
+                    <StackPanel Grid.Row="3" Grid.Column="1" Margin="10" HorizontalAlignment="Left">
+                        <CheckBox x:Name="CheckBoxExecutor" Width="200" Content="Изменить исполнителя" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Unchecked"></CheckBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="5" Grid.Column="1" Margin="10" HorizontalAlignment="Left">
+                        <CheckBox x:Name="CheckBoxGanre" Width="200" Content="Изменить жанр" Checked="CheckBox_Checked_1" Unchecked="CheckBox_Unchecked"></CheckBox>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Row="7" Grid.Column="1">
+                        <TextBlock  Text="Сохранить" TextAlignment="Center" Margin="35" Width="65" Style="{StaticResource TextBlockMouseEnter }"></TextBlock>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+
+            <!--Редактирование жанра-->
+            <StackPanel x:Name="EditGanreStackPanel" Grid.Row="1" Visibility="Hidden" Grid.ColumnSpan="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
+                        <ListBox x:Name="GareListBox" Style="{StaticResource MaterialDesignNavigationPrimaryListBox }" 
+                                 Width="550" Height="330"></ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="10">
+                        <TextBlock TextAlignment="Center" FontWeight="Bold">Редактирование жанра трека</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Grid.Column="1" Margin="10">
+                        <TextBlock TextAlignment="Center" Text="Сохранить" Style="{StaticResource TextBlockMouseEnter}" Width="70"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Margin="10">
+                        <TextBox x:Name="EditNameGanre" materialDesign:HintAssist.Hint="Название жанра" Width="200"></TextBox>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+
+            <!--Редактирование исполнителя-->
+            <StackPanel x:Name="EditExecutorStackPanel" Grid.Row="1" Visibility="Hidden" Grid.ColumnSpan="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
+                        <ListBox x:Name="ExecutorListBox" Style="{StaticResource MaterialDesignNavigationPrimaryListBox }" 
+                                 Width="550" Height="330"></ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="10">
+                        <TextBlock TextAlignment="Center" FontWeight="Bold">Редактирование исполнителя трека</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Grid.Column="1" Margin="10">
+                        <TextBlock TextAlignment="Center" Text="Сохранить" Style="{StaticResource TextBlockMouseEnter}" Width="70"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Margin="10">
+                        <TextBox x:Name="EditNameExecutor" materialDesign:HintAssist.Hint="Имя исполнителя" Width="200"></TextBox>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+
+            <!--Редактирование Издательства-->
+            <StackPanel x:Name="EditPublishHouesStackPanel" Grid.Row="1" Visibility="Hidden" Grid.ColumnSpan="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
+                        <ListBox x:Name="PublishHousesListBox" Style="{StaticResource MaterialDesignNavigationPrimaryListBox }" 
+                                 Width="550" Height="330"></ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="10">
+                        <TextBlock TextAlignment="Center" FontWeight="Bold">Редактирование издательства</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Grid.Column="1" Margin="10">
+                        <TextBlock TextAlignment="Center" Text="Сохранить" Style="{StaticResource TextBlockMouseEnter}" Width="70"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Margin="10">
+                        <TextBox x:Name="EditNamePublishHouse" materialDesign:HintAssist.Hint="Название издательства" Width="200"></TextBox>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+
+            <!--Удаление Пластинки-->
+            <StackPanel x:Name="DelMusicRecordStackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Hidden">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <TextBlock Margin="10" TextAlignment="Center" FontWeight="Bold">Удаление пластинки</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                        <ListBox x:Name="DelListBoxMusicRecord" Width="550" Height="300"></ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="2">
+                        <TextBlock Margin="10" TextAlignment="Center" Width="50" Style="{StaticResource TextBlockMouseEnter}">Удалить</TextBlock>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+
+            <!--Удаление Песни-->
+            <StackPanel x:Name="DelSongsStackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Hidden">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <TextBlock Margin="10" TextAlignment="Center" FontWeight="Bold">Удаление песни</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                        <ListBox x:Name="DelListBoxSongs" Width="550" Height="300"></ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="2">
+                        <TextBlock Margin="10" TextAlignment="Center" Width="50" Style="{StaticResource TextBlockMouseEnter}">Удалить</TextBlock>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+            
+            <!--Удаление Жанра-->
+            <StackPanel x:Name="DelGanreStackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Hidden">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <TextBlock Margin="10" TextAlignment="Center" FontWeight="Bold">Удаление жанра</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                        <ListBox x:Name="DelListBoxGanre" Width="550" Height="300"></ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="2">
+                        <TextBlock Margin="10" TextAlignment="Center" Width="50" Style="{StaticResource TextBlockMouseEnter}">Удалить</TextBlock>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+
+            <!--Удаление Издательсвтва-->
+            <StackPanel x:Name="DelPublishHouseStackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Hidden">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <TextBlock Margin="10" TextAlignment="Center" FontWeight="Bold">Удаление издательства</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                        <ListBox x:Name="DelListBoxPublishHoues" Width="550" Height="300"></ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="2">
+                        <TextBlock Margin="10" TextAlignment="Center" Width="50" Style="{StaticResource TextBlockMouseEnter}">Удалить</TextBlock>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+            
+            <!--Удаление Исполнителя-->
+            <StackPanel x:Name="DelExecutorStackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Hidden">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <TextBlock Margin="10" TextAlignment="Center" FontWeight="Bold">Удаление исполнителя</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                        <ListBox x:Name="DelListBoxExecutor" Width="550" Height="300"></ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="2">
+                        <TextBlock Margin="10" TextAlignment="Center" Width="50" Style="{StaticResource TextBlockMouseEnter}">Удалить</TextBlock>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+
+            <!--Настройки Админа-->
+            <StackPanel x:Name="AdminsStackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <TextBlock TextAlignment="Center" FontWeight="Bold">Настройки</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="10">
+                        <TextBox x:Name="AdminLogin" Width="250" materialDesign:HintAssist.Hint="Логин"></TextBox>
+                    </StackPanel>
+                    
+                    <StackPanel x:Name="CanNotSeeStackPanel" Grid.Row="2" Grid.Column="0" Margin="10" Orientation="Horizontal">
+                        <PasswordBox  x:Name="AdminPasswordBox" Width="250" materialDesign:HintAssist.Hint="Пароль" Margin="40 0 0 0" ></PasswordBox>
+                        <Border Margin="5 7 0 0 " MouseDown="BorderCanNotSee_MouseDown">
+                            <Image Height="20" Width="20" x:Name="ImageAdminCanNotSee">
+                                <Image.Source>
+                                    <BitmapImage UriSource="/Logo/EyeCan'tSee.png"></BitmapImage>
+                                </Image.Source>
+                            </Image>
+                        </Border>
+                    </StackPanel>
+                    
+                    <StackPanel x:Name="CanSeeStackPanel" Grid.Row="2" Grid.Column="0" Margin="10" Orientation="Horizontal" Visibility="Hidden">
+                        <TextBox  x:Name="AdminPassword" Width="250" materialDesign:HintAssist.Hint="Пароль" Margin="40 0 0 0"></TextBox>
+                        <Border Margin="5 7 0 0 " MouseDown="BorderCanSee_MouseDown">
+                            <Image Height="20" Width="20" x:Name="ImageAdminCanSee">
+                                <Image.Source>
+                                    <BitmapImage UriSource="/Logo/EyeCanSee.png"></BitmapImage>
+                                </Image.Source>
+                            </Image>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="1">
+                        <TextBlock TextAlignment="Center" Style="{StaticResource TextBlockMouseEnter}">Сохранить</TextBlock>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
