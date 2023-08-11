@@ -4,6 +4,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media.TextFormatting;
 
 namespace VinylShop.Model
 {
@@ -30,7 +32,6 @@ namespace VinylShop.Model
                 SaveChanges();
             }
         }
-
         public bool CheckUserEmail(string temp)
         {
             foreach (var user in users)
@@ -77,5 +78,67 @@ namespace VinylShop.Model
             }
             return null;
         }
+
+        public GanreMusic GetGanre(GanreMusic temp)
+        {
+            return ganreMusics.Find(temp.Id);
+        }
+
+        public List<GanreMusic> GetListGanre(GanreMusic temp)
+        {
+            List<GanreMusic> list = new List<GanreMusic>();
+            list.Add(ganreMusics.Find(temp.Id));
+            return list;
+        }
+
+        public ExecutorMusic GetExecutors(ExecutorMusic temp)
+        {
+            return executorMusics.Find(temp.Id);
+        }
+
+        public List<ExecutorMusic> GetListExecutors(ExecutorMusic temp)
+        {
+            List<ExecutorMusic> list = new List<ExecutorMusic>();
+            list.Add(executorMusics.Find(temp.Id));
+            return list;
+        }
+
+        public List<Songs> GetSongs()
+        {
+            List<Songs> list = new List<Songs>();
+            foreach(var item in songs.ToList())
+            {
+                Entry(item).Collection("ganreMusics").Load();
+                Entry(item).Collection("executorMusics").Load();
+                list.Add(item);
+            }
+            return list;
+        }
+
+        public Songs GetSong(Songs song)
+        {
+            return songs.Find(song.Id);
+        }
+
+        public PubishHouse GetPubishHouse(PubishHouse temp)
+        {
+            return pubishHouses.Find(temp.Id);
+        }
+
+        public List<Songs> GetSongsForRecord(List<Songs> temp)
+        {
+            List<Songs> list = new List<Songs>();
+            foreach (var item in temp)
+            {
+                foreach (var song in songs)
+                {
+                    if(song.Id == item.Id)
+                        list.Add(song);
+                }
+            }
+            return list;
+
+        }
+
     }
 }

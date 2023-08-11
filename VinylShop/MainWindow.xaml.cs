@@ -26,11 +26,10 @@ namespace VinylShop
         public MainWindow()
         {
             InitializeComponent();
-            AdminWindow adminWindow = new AdminWindow();
-            var temp = adminWindow.ShowDialog();
         }
 
 
+        //Окно регистрации
         private void labelTest_MouseDown(object sender, MouseButtonEventArgs e)
         {
             RegistrationWindow registration = new RegistrationWindow();
@@ -42,6 +41,7 @@ namespace VinylShop
             }
         }
 
+        //Вход пользователя
         private void passwordBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -81,9 +81,43 @@ namespace VinylShop
             }
         }
 
+
+        //Вход Админа
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
+
+            Admins admins = null;
+            using (db = new VinylShopContext())
+            {
+                foreach(var admin in db.admins)
+                {
+                    if(admin.IsEnabled == true)
+                    {
+                        admins = admin;
+                        break;
+                    }
+                }
+                if (admins != null)
+                {
+                    OpenAdminWindow(admins);
+                }
+                else
+                {
+                    AdminEnterWindow enterWindow = new AdminEnterWindow();
+                    enterWindow.ShowDialog();
+                    if (enterWindow.admins != null)
+                    {
+                        OpenAdminWindow(enterWindow.admins);
+                    }
+                }
+            }
+
+
+        }
+        private void OpenAdminWindow(Admins admin)
+        {
             AdminWindow adminWindow = new AdminWindow();
+            adminWindow.SetAdmin(admin);
             this.Visibility = Visibility.Hidden;
             var temp = adminWindow.ShowDialog();
             if (temp == false)

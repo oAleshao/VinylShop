@@ -27,11 +27,6 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Background="#B165D4">
-            <!--<Image  HorizontalAlignment="Left" Margin="2" Stretch="Uniform" Width="150" Height="130">
-                <Image.Source >
-                    <BitmapImage UriSource="/LogoWithoutText.png" ></BitmapImage>
-                </Image.Source>
-            </Image>-->
             <Image  HorizontalAlignment="Center" Stretch="Uniform" Width="200" Height="130" Margin="0 5 10 0">
                 <Image.Source >
                     <BitmapImage UriSource="/Logo/LogoNamePunk.png" ></BitmapImage>

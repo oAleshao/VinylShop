@@ -23,5 +23,10 @@ namespace VinylShop.Model
         {
             songs = new List<Songs>();
         }
+
+        public override string ToString()
+        {
+           return $"{Name} | Кол-во песен: {CountSongs} | Год: {Year} | Цена: {Price} | Издательство {pubishHouse.Name}";
+        }
     }
 }

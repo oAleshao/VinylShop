@@ -85,6 +85,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Migrations\202308070137252_InitialCreate.cs" />
+    <Compile Include="Migrations\202308070137252_InitialCreate.designer.cs">
+      <DependentUpon>202308070137252_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308110046522_AddAdmin_IsEnabled.cs" />
+    <Compile Include="Migrations\202308110046522_AddAdmin_IsEnabled.designer.cs">
+      <DependentUpon>202308110046522_AddAdmin_IsEnabled.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308111237192_DelAdmin_Requaried.cs" />
+    <Compile Include="Migrations\202308111237192_DelAdmin_Requaried.designer.cs">
+      <DependentUpon>202308111237192_DelAdmin_Requaried.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308111820409_ChangeClassSongsAndRecords.cs" />
+    <Compile Include="Migrations\202308111820409_ChangeClassSongsAndRecords.designer.cs">
+      <DependentUpon>202308111820409_ChangeClassSongsAndRecords.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="View\AdminEnterWindow.xaml.cs">
+      <DependentUpon>AdminEnterWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AdminWindow.xaml.cs">
       <DependentUpon>AdminWindow.xaml</DependentUpon>
     </Compile>
@@ -108,6 +128,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\AdminEnterWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AdminWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -144,6 +168,18 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrations\202308070137252_InitialCreate.resx">
+      <DependentUpon>202308070137252_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308110046522_AddAdmin_IsEnabled.resx">
+      <DependentUpon>202308110046522_AddAdmin_IsEnabled.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308111237192_DelAdmin_Requaried.resx">
+      <DependentUpon>202308111237192_DelAdmin_Requaried.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308111820409_ChangeClassSongsAndRecords.resx">
+      <DependentUpon>202308111820409_ChangeClassSongsAndRecords.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

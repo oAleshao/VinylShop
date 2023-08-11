@@ -16,5 +16,10 @@ namespace VinylShop.Model
         {
             songs = new List<Songs>();
         }
+
+        public override string ToString()
+        {
+            return $"{Name}";
+        }
     }
 }
