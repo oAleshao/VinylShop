@@ -48,7 +48,7 @@ namespace VinylShop.Model
                 foreach (var executor in executorMusics)
                 {
                     allExecutor += executor.Name;
-                    if (indxHelp != ganreMusics.Count)
+                    if (indxHelp != executorMusics.Count)
                     {
                         allExecutor += " & ";
                     }
