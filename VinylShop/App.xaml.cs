@@ -13,5 +13,9 @@ namespace VinylShop
     /// </summary>
     public partial class App : Application
     {
+        private void EventTrigger_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+
+        }
     }
 }

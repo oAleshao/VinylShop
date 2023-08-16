@@ -217,6 +217,21 @@
     <Resource Include="Logo\EyeCan%27tSee.png" />
     <Resource Include="Logo\EyeCanSee.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Logo\BagShop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Logo\SearchGlass.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Logo\GoBackIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Logo\BackGroundOrange.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Logo\BackGroundBlue.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

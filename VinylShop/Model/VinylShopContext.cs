@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Media.TextFormatting;
 using VinylShop.Model;
+using MessageBox = System.Windows.MessageBox;
 
 namespace VinylShop.Model
 {

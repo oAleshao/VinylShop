@@ -26,6 +26,9 @@ namespace VinylShop
         public MainWindow()
         {
             InitializeComponent();
+
+            MainShopWindow mainShop = new MainShopWindow();
+            mainShop.ShowDialog();
         }
 
 
@@ -74,8 +77,19 @@ namespace VinylShop
                         passwordBox.ToolTip = null;
                     }
 
+                    users = db.users.Find(users.Id);
+                    MessageBox.Show(users.ToString());
+
                     MainShopWindow mainShop = new MainShopWindow();
-                    mainShop.ShowDialog();
+                    mainShop.SetUser(users);
+                    this.Visibility = Visibility.Hidden;
+                    loginBox.Text = string.Empty;
+                    passwordBox.Password = string.Empty;
+                    var temp = mainShop.ShowDialog();
+                    if (temp == false)
+                    {
+                        this.Visibility = Visibility.Visible;
+                    }
 
                 }
             }
