@@ -101,7 +101,28 @@
     <Compile Include="Migrations\202308111820409_ChangeClassSongsAndRecords.designer.cs">
       <DependentUpon>202308111820409_ChangeClassSongsAndRecords.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308161224573_Add_QuantityForMusicRecords.cs" />
+    <Compile Include="Migrations\202308161224573_Add_QuantityForMusicRecords.designer.cs">
+      <DependentUpon>202308161224573_Add_QuantityForMusicRecords.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308161408573_ChangeOrdersAndShopBags.cs" />
+    <Compile Include="Migrations\202308161408573_ChangeOrdersAndShopBags.designer.cs">
+      <DependentUpon>202308161408573_ChangeOrdersAndShopBags.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308161438036_ChangeShopBag.cs" />
+    <Compile Include="Migrations\202308161438036_ChangeShopBag.designer.cs">
+      <DependentUpon>202308161438036_ChangeShopBag.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308161441359_AddShopBagAfterBug.cs" />
+    <Compile Include="Migrations\202308161441359_AddShopBagAfterBug.designer.cs">
+      <DependentUpon>202308161441359_AddShopBagAfterBug.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308162101005_AddTotalPrice.cs" />
+    <Compile Include="Migrations\202308162101005_AddTotalPrice.designer.cs">
+      <DependentUpon>202308162101005_AddTotalPrice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\HelpOrders.cs" />
     <Compile Include="View\AdminEnterWindow.xaml.cs">
       <DependentUpon>AdminEnterWindow.xaml</DependentUpon>
     </Compile>
@@ -149,7 +170,6 @@
     <Compile Include="Model\GanreMusic.cs" />
     <Compile Include="Model\ExecutorMusic.cs" />
     <Compile Include="Model\Music_Records.cs" />
-    <Compile Include="Model\Product.cs" />
     <Compile Include="Model\PubishHouse.cs" />
     <Compile Include="Model\ShopBag.cs" />
     <Compile Include="Model\Songs.cs" />
@@ -179,6 +199,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308111820409_ChangeClassSongsAndRecords.resx">
       <DependentUpon>202308111820409_ChangeClassSongsAndRecords.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308161224573_Add_QuantityForMusicRecords.resx">
+      <DependentUpon>202308161224573_Add_QuantityForMusicRecords.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308161408573_ChangeOrdersAndShopBags.resx">
+      <DependentUpon>202308161408573_ChangeOrdersAndShopBags.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308161438036_ChangeShopBag.resx">
+      <DependentUpon>202308161438036_ChangeShopBag.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308161441359_AddShopBagAfterBug.resx">
+      <DependentUpon>202308161441359_AddShopBagAfterBug.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308162101005_AddTotalPrice.resx">
+      <DependentUpon>202308162101005_AddTotalPrice.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

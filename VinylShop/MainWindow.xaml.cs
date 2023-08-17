@@ -28,6 +28,10 @@ namespace VinylShop
             InitializeComponent();
 
             MainShopWindow mainShop = new MainShopWindow();
+            using(db = new VinylShopContext())
+            {
+                mainShop.SetUser(db.users.Find(1));
+            }
             mainShop.ShowDialog();
         }
 
@@ -78,7 +82,6 @@ namespace VinylShop
                     }
 
                     users = db.users.Find(users.Id);
-                    MessageBox.Show(users.ToString());
 
                     MainShopWindow mainShop = new MainShopWindow();
                     mainShop.SetUser(users);

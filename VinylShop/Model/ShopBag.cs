@@ -10,11 +10,10 @@ namespace VinylShop.Model
     {
         public int Id { get; set; }
         public virtual Users IdUser { get; set; }
-        public virtual ICollection<Product> Products { get; set; }
+        public virtual Music_Records music_Records { get; set; }
 
         public ShopBag()
         {
-            Products = new List<Product>();
         }
     }
 }

@@ -19,6 +19,8 @@ namespace VinylShop.Model
         public virtual ICollection<Songs> songs { get; set; }
 
         public string Description { get; set; }
+
+        public int Quantity { get; set; }
         public Music_Records() 
         {
             songs = new List<Songs>();
@@ -26,7 +28,21 @@ namespace VinylShop.Model
 
         public override string ToString()
         {
-           return $"{Name} | Кол-во песен: {CountSongs} | Год: {Year} | Цена: {Price} | Издательство {pubishHouse.Name}";
+           return $"{Name} | Цена: {Price} | Год: {Year} | Кол-во песен: {CountSongs} | Издательство {pubishHouse.Name}";
         }
     }
+
+
+    //public class ShopBag
+    //{
+    //    public int Id { get; set; }
+    //    public virtual Users IdUser { get; set; }
+    //    public virtual Music_Records music_Records { get; set; }
+
+    //    public ShopBag()
+    //    {
+    //    }
+    //}
 }
+
+

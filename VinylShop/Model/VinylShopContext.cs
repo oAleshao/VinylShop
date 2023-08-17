@@ -26,7 +26,7 @@ namespace VinylShop.Model
         public DbSet<Songs> songs { get; set; }
         public DbSet<Users> users { get; set; }
         public DbSet<Admins> admins { get; set; }
-        public DbSet<Product> products { get; set; }
+        public DbSet<HelpOrders> helpOrders { get; set; }
 
         public VinylShopContext() : base("DbVinylShop") { }
 
@@ -281,7 +281,6 @@ namespace VinylShop.Model
             return list;
         }
 
-
         public List<Music_Records> SearchMusicRecordsByName(string seacrhStr)
         {
             List<Music_Records> list = new List<Music_Records>();
@@ -453,5 +452,176 @@ namespace VinylShop.Model
             return list;
         }
 
+        public List<Music_Records> GetListMusicRecordsForShopBag(int IdUser)
+        {
+            List<Music_Records> list = new List<Music_Records>();
+            foreach(var item in shopBags.ToList())
+            {
+                if(item.IdUser.Id == IdUser) 
+                {
+                    Entry(item.music_Records).Reference("pubishHouse").Load();
+                    list.Add(item.music_Records);
+                }
+            }
+            return list;
+        }
+
+        public bool AddMusicRecordsToShopBag(ShopBag bag, Users user)
+        {
+            foreach(var item in shopBags.ToList())
+            {
+                if(user.Id == item.IdUser.Id)
+                {
+                    if (CompareToMusicRecords(item.music_Records, bag.music_Records))
+                        return false;
+                }
+            }
+            shopBags.Add(bag);
+            SaveChanges();
+            return true;
+        }
+
+        public void DelMusicRecordFromShopBag(Music_Records records, Users user)
+        {
+            foreach (var item in shopBags.ToList())
+            {
+                if(item.IdUser.Id == user.Id)
+                {
+                    if(CompareToMusicRecords(records, item.music_Records))
+                    {
+                        shopBags.Remove(item);
+                        SaveChanges();
+                        return;
+                    }
+                }
+            }
+        }
+
+        public bool CompareToMusicRecords(Music_Records first, Music_Records second)
+        {
+            return first.Name == second.Name && first.pubishHouse.Name == second.pubishHouse.Name && first.CountSongs == second.CountSongs
+                && first.Quantity == second.Quantity && first.Year == second.Year && first.Price == second.Price;
+        }
+
+        public bool IsMusicRecordInList(List<Music_Records> list, Music_Records music)
+        {
+            foreach(var item in list)
+            {
+                if(CompareToMusicRecords(item, music))
+                    return true;
+            }
+            return false;
+        }
+
+        public List<Orders> GetListOrders(Users user)
+        {
+            List<Orders> list = new List<Orders>();
+
+            foreach(var item in orders.ToList())
+            {
+                if (item.Iduser.Id == user.Id)
+                {
+                    Entry(item).Collection("helpOrders_").Load();
+                    list.Add(item);
+                }
+            }
+            return list;
+        }
+
+
+        public List<HelpOrders> GetListHelpOrders(Orders order)
+        {
+            order = orders.Find(order.Id);
+            List<HelpOrders> list = new List<HelpOrders>();
+            foreach (var item in order.helpOrders_.ToList()) 
+            {
+                Entry(item).Reference("music_Records").Load();
+                list.Add(item);
+            }
+            return list;
+        }
+
+        public List<Music_Records> Get5NewMusicRecords()
+        {
+            List<Music_Records> Rlist = music_Records.ToList();
+            Rlist.Reverse(0, Rlist.Count);
+            List<Music_Records> list = new List<Music_Records>();
+            int helpIndx = 0;
+            foreach (var item in Rlist) 
+            {
+                if (helpIndx == 5)
+                    break;
+                Entry(item).Reference("pubishHouse").Load();
+                list.Add(item); 
+                helpIndx++;
+            }
+            return list;
+        }
+
+        public List<Music_Records> GetTopSellMusicRecords()
+        {
+            List<Music_Records> list = new List<Music_Records>();
+            int indxHelp = 0;
+            Music_Records record = new Music_Records();
+            var temp = helpOrders.GroupBy(x => x.music_Records.Id).Select(g => new { id = g.Key, Count = g.Count()}).OrderBy(x=> -x.Count);
+            foreach (var item in temp.ToList())
+            {
+                if (indxHelp == 5)
+                    break;
+                record = music_Records.Find(item.id);
+                Entry(record).Reference("pubishHouse").Load();
+                list.Add(record);
+            }
+
+
+            return list;
+        }
+
+        public List<Music_Records> GetTopExecutors()
+        {
+            var temp = executorMusics.OrderBy(x => -x.songs.Count).Take(5).ToList();
+
+            List<Music_Records> list = new List<Music_Records>();
+
+            foreach (var item in temp)
+            {
+                foreach (var item2 in item.songs)
+                {
+                    foreach(var record in item2.music_Records)
+                    {
+                        Entry(record).Reference("pubishHouse").Load();
+                        if (!IsMusicRecordInList(list, record))
+                            list.Add(record);
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        public List<Music_Records> GetTopGanres()
+        {
+            var temp = ganreMusics.OrderBy(x => -x.songs.Count).Take(5).ToList();
+            List<Music_Records> list = new List<Music_Records>();
+
+            foreach (var item in temp)
+            {
+                foreach (var item2 in item.songs)
+                {
+                    foreach (var record in item2.music_Records)
+                    {
+                        Entry(record).Reference("pubishHouse").Load();
+                        if (!IsMusicRecordInList(list, record))
+                            list.Add(record);
+                    }
+                }
+            }
+
+            return list;
+        }
+
     }
+
+
+
 }

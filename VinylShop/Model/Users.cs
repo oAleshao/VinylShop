@@ -20,6 +20,14 @@ namespace VinylShop.Model
         [Required]
         public string PhoneNumber { get; set; }
         public string Adres { get; set; }
+
+        public virtual ICollection<Orders> userOrders { get; set; }
+
+        public Users() 
+        {
+            userOrders = new List<Orders>();
+        }
+
         public override string ToString()
         {
             return $"{FullName} {Email} {Login} {Password} {PhoneNumber} {Adres}";
