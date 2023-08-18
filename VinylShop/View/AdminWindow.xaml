@@ -98,7 +98,7 @@
 
 
             <!--Добавление пластинок-->
-            <StackPanel x:Name="AddMusicRecordStackPanel" Grid.Row="1" Height="570" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,0,0,-16">
+            <StackPanel x:Name="AddMusicRecordStackPanel" Grid.Row="1" Height="570" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,0,0, 16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
@@ -112,7 +112,7 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="50"></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
@@ -122,33 +122,41 @@
                     <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
                         <TextBlock TextAlignment="Center" FontWeight="Bold">Добавление музыкальной пластинки</TextBlock>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Margin="10">
+                    <StackPanel Grid.Row="1" Margin="5">
                         <TextBox x:Name="NameRecord" Width="200"  materialDesign:HintAssist.Hint="Название пластинки"></TextBox>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Margin="10">
+                    <StackPanel Grid.Row="2" Margin="5">
                         <TextBox x:Name="YearRecord" Width="200"  materialDesign:HintAssist.Hint="Год"></TextBox>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Margin="10">
+                    <StackPanel Grid.Row="3" Margin="5">
                         <TextBox x:Name="DescriptionRecord" Width="200"  materialDesign:HintAssist.Hint="Описание"></TextBox>
                     </StackPanel>
-                    <StackPanel Grid.Row="4" Margin="10">
+                    <StackPanel Grid.Row="4" Margin="5">
                         <ComboBox Name="ComboBoxPublishHouse" Width="200"  materialDesign:HintAssist.Hint="Издательство"></ComboBox>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="5" HorizontalAlignment="Center">
                         <TextBlock Margin="10" FontWeight="Bold" TextAlignment="Center">Песни</TextBlock>
-                        <ListBox x:Name="SongsListBoxForRecords" Width="320" Height="350" ScrollViewer.CanContentScroll="True"
-                                 Style="{StaticResource MaterialDesignNavigationPrimaryListBox }">
+                        <ListBox x:Name="SongsListBoxForRecords" Width="320" Height="320" ScrollViewer.CanContentScroll="True"
+                                 Style="{StaticResource  MaterialDesignFilterChipPrimaryOutlineListBox }">
                         </ListBox>
-                        <TextBlock Style="{StaticResource TextBlockMouseEnter}" TextAlignment="Center" Text="Добавить трек" Width="90" MouseDown="AddSongToMusicRecord_MouseDown"></TextBlock>
                     </StackPanel>
-                    <StackPanel Grid.Row="5" Margin="10">
+
+                    <StackPanel Grid.Column="1" Grid.Row="6" >
+                        <TextBlock Style="{StaticResource TextBlockMouseEnter}" TextAlignment="Center" Text="Добавить трек" Width="90" MouseDown="AddSongToMusicRecord_MouseDown"></TextBlock>
+
+                    </StackPanel>
+                    <StackPanel Grid.Row="5" Margin="5">
                         <TextBox x:Name="CountSongsInRecord" materialDesign:HintAssist.Hint="Кол-во треков"  Width="200" IsReadOnly="True"></TextBox>
                     </StackPanel>
-                    <StackPanel Grid.Row="6" Margin="10">
+                    <StackPanel Grid.Row="6" Margin="5">
                         <TextBox x:Name="PriceMusicRecord" Width="200" materialDesign:HintAssist.Hint="Цена"></TextBox>
                     </StackPanel>
-                    <StackPanel Grid.Row="7" Grid.Column="1">
+                    <StackPanel Grid.Row="9" Grid.Column="1">
                         <TextBlock Text="Сохранить" TextAlignment="Center" Width="65" Style="{StaticResource TextBlockMouseEnter}" MouseDown="AddMusicRecord_MouseDown"></TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="8" Margin="20">
+                        <TextBox x:Name="QuantityRecords" Width="200" materialDesign:HintAssist.Hint="Количество"></TextBox>
                     </StackPanel>
                 </Grid>
             </StackPanel>
@@ -188,7 +196,7 @@
 
                     <StackPanel x:Name="FewExecutorsAddStackPanel"  Grid.Row="2" Margin="10" Visibility="Hidden">
                         <TextBlock Margin="30 0 0 0" FontWeight="Bold">Исполнители</TextBlock>
-                        <ListBox x:Name="ListBoxAddExecutorsToSongs"></ListBox>
+                        <ListBox x:Name="ListBoxAddExecutorsToSongs" Style="{StaticResource  MaterialDesignFilterChipPrimaryOutlineListBox }"></ListBox>
                     </StackPanel>
                     
                     <StackPanel Grid.Row="2" Grid.Column="1" Margin="10"  VerticalAlignment="Top">
@@ -206,7 +214,7 @@
 
                     <StackPanel x:Name="FewGanresAddStackPanel" Grid.Row="4" Margin="10" Visibility="Hidden">
                         <TextBlock Margin="30 0 0 0" FontWeight="Bold">Жанры</TextBlock>
-                        <ListBox x:Name="ListBoxAddGanresToSongs"></ListBox>
+                        <ListBox x:Name="ListBoxAddGanresToSongs" Style="{StaticResource  MaterialDesignFilterChipPrimaryOutlineListBox }"></ListBox>
                     </StackPanel>
                     <StackPanel Grid.Row="4" Margin="10" VerticalAlignment="Top" Grid.Column="1">
                         <CheckBox x:Name="FewGanresCheckBox" Margin="13 0 0 0" Checked="FewGanresAddCheckBox_Checked" Unchecked="FewGanresAddCheckBox_Unchecked">Несколько жанров</CheckBox>
@@ -343,7 +351,7 @@
             
             
              <!--Редактирование пластинки-->
-            <StackPanel x:Name="EditMusicRecordStackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Hidden">
+            <StackPanel x:Name="EditMusicRecordStackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Visible">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
@@ -379,9 +387,9 @@
                     <StackPanel Grid.Row="4" Margin="10">
                         <TextBox x:Name="DescriptionRecordEdit" Width="200"  materialDesign:HintAssist.Hint="Описание"></TextBox>
                     </StackPanel>
-                    <StackPanel Grid.Row="5" Margin="10" Orientation="Horizontal">
-                        <ComboBox Margin="63 0 0 25" Name="ComboBoxPublishHouseEdit" Width="200"  materialDesign:HintAssist.Hint="Издательство" Visibility="Hidden"></ComboBox>
-                        <CheckBox x:Name="CheckBoxChangeTextBoxToComboBoxEditRecord" Margin="10 10 0 30" ToolTip="Изменить издательство"
+                    <StackPanel Grid.Row="5" Margin="5" Orientation="Horizontal">
+                        <ComboBox Margin="63 0 0 20" Name="ComboBoxPublishHouseEdit" Width="200"  materialDesign:HintAssist.Hint="Издательство" Visibility="Hidden"></ComboBox>
+                        <CheckBox x:Name="CheckBoxChangeTextBoxToComboBoxEditRecord" Margin="10 10 0 20" ToolTip="Изменить издательство"
                                   Checked="EditPublishHouseForMusicRecords_Checked" Unchecked="EditPublishHouseForMusicRecords_Unchecked"></CheckBox>
                     </StackPanel>
                     <StackPanel Grid.Row="5" Margin="10">
@@ -389,8 +397,8 @@
                     </StackPanel>
                     <StackPanel Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" HorizontalAlignment="Center">
                         <TextBlock Margin="10" FontWeight="Bold" TextAlignment="Center">Песни</TextBlock>
-                        <ListBox x:Name="SongsListBoxForRecordsEdit" Width="300" Height="230" FontSize="12"
-                                 Style="{StaticResource MaterialDesignListBox }">
+                        <ListBox x:Name="SongsListBoxForRecordsEdit" Width="300" Height="220" FontSize="12"
+                                Style="{StaticResource  MaterialDesignFilterChipPrimaryOutlineListBox}">
                         </ListBox>                      
                     </StackPanel>
                     <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
@@ -398,7 +406,6 @@
                                   Checked="CheckBoxEditSongs_Checked" Unchecked="CheckBoxEditSongs_Unchecked">Добавить песни</CheckBox>
                         <CheckBox x:Name="CheckBoxEditSongsDel" Margin="10 5 0 30"
                                   Checked="CheckBoxEditSongsDel_Checked" Unchecked="CheckBoxEditSongsDel_Unchecked">Удалить песни</CheckBox>
-
                     </StackPanel>
                     <StackPanel Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
                         <TextBlock x:Name="AddSongToListForMusicRecordTextBlock" Style="{StaticResource TextBlockMouseEnter}" Visibility="Hidden"
@@ -407,10 +414,15 @@
                                 MouseDown="DelOldSongToListForMusicRecord_MouseDown" TextAlignment="Center" Text="Удалить трек" Width="90" Margin="7 20 0 0"></TextBlock>
                     </StackPanel>
                     <StackPanel Grid.Row="6" Margin="10">
-                        <TextBox x:Name="PriceMusicRecordsEditTextBox" Margin="2 0 0 10" materialDesign:HintAssist.Hint="Цена"  Width="200"></TextBox>
+                        <TextBox x:Name="PriceMusicRecordsEditTextBox" Margin="1 0 0 20" materialDesign:HintAssist.Hint="Цена"  Width="200"></TextBox>
                     </StackPanel>
-                    <StackPanel Grid.Row="7" Grid.Column="1">
-                        <TextBlock Text="Сохранить" TextAlignment="Center" Margin="35" Width="65" Style="{StaticResource TextBlockMouseEnter }"
+
+                    <StackPanel Grid.Row="7" Margin="10">
+                        <TextBox x:Name="QuantityEdit" Width="200"  materialDesign:HintAssist.Hint="Количество"></TextBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="8" Grid.Column="1">
+                        <TextBlock Text="Сохранить" TextAlignment="Center"  Width="65" Style="{StaticResource TextBlockMouseEnter }"
                                    MouseDown="SaveEditMusicRecord_MouseDown"></TextBlock>
                     </StackPanel>
                 </Grid>
@@ -831,7 +843,7 @@
                     </StackPanel>
                     
                     <StackPanel Grid.Row="3" Grid.Column="1">
-                        <TextBlock Width="70" TextAlignment="Center" Style="{StaticResource TextBlockMouseEnter}" MouseDown="SaveAdminData_MouseDown">Сохранить</TextBlock>
+                        <TextBlock TextAlignment="Center" Style="{StaticResource TextBlockMouseEnter}" MouseDown="SaveAdminData_MouseDown">Сохранить изменения</TextBlock>
                     </StackPanel>
 
                     <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 100 0 0">
@@ -845,6 +857,89 @@
                     </StackPanel>
                     <StackPanel Grid.Row="7" Grid.Column="1">
                         <TextBlock Style="{StaticResource TextBlockMouseEnter}" TextAlignment="Center" Width="60" MouseDown="AddNewAdmin_MouseDown">Добавить</TextBlock>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel x:Name="AddSellDayStackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Hidden">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="30">
+                        <TextBlock x:Name="NameSellDayTextBlock" HorizontalAlignment="Center" FontWeight="Bold">Добавления акционных дней</TextBlock>
+                    </StackPanel>
+
+
+                    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                        <ListBox x:Name="ListAllSellsDay" MaxHeight="200" Width="600" SelectionChanged="ListAllSellsDay_SelectionChanged"></ListBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="20">
+                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Bottom" FontWeight="Bold">Начало акции</TextBlock>
+                        <ComboBox x:Name="ddStart" Width="35" Margin="30 0 0 0" materialDesign:HintAssist.Hint="дд"></ComboBox>
+                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Bottom" FontWeight="Bold">.</TextBlock>
+                        <ComboBox x:Name="mmStart" Width="35" Margin="10 0 0 0" materialDesign:HintAssist.Hint="мм"></ComboBox>
+                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Bottom" FontWeight="Bold">.</TextBlock>
+                        <ComboBox x:Name="yyStart" Width="55" Margin="20 0 0 0" materialDesign:HintAssist.Hint="гг"></ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="20">
+                        <TextBlock VerticalAlignment="Bottom" FontWeight="Bold">Конец акции</TextBlock>
+                        <ComboBox x:Name="ddEnd" Width="35" Margin="30 0 0 0" materialDesign:HintAssist.Hint="дд"></ComboBox>
+                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Bottom" FontWeight="Bold">.</TextBlock>
+                        <ComboBox x:Name="mmEnd" Width="35" Margin="10 0 0 0" materialDesign:HintAssist.Hint="мм"></ComboBox>
+                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Bottom" FontWeight="Bold">.</TextBlock>
+                        <ComboBox x:Name="yyEnd" Width="56" Margin="20 0 0 0" materialDesign:HintAssist.Hint="гг"></ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3" Grid.Column="0" Margin="10">
+                        <ComboBox x:Name="GanreComboBoxForSell" Width="200" materialDesign:HintAssist.Hint="Акционный жанр"></ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3" Grid.Column="1" Margin="10">
+                        <TextBox x:Name="AmountSellTextBox" Width="200" materialDesign:HintAssist.Hint="Скидка"></TextBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="4" Grid.Column="1" Margin="0 40 70 0">
+                        <TextBlock x:Name="AddOrSaveTextBlockSellsDay" HorizontalAlignment="Center" Style="{StaticResource TextBlockMouseEnter}" MouseDown="AddSellDay_MouseDown">Добавить</TextBlock>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel x:Name="DelSellDayStackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Hidden">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="20">
+                        <TextBlock HorizontalAlignment="Center" FontWeight="Bold">Удаление акции</TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="2">
+                        <ListBox x:Name="DelListBoxSellsDay" Width="600" Height="300"></ListBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="20">
+                        <TextBlock HorizontalAlignment="Center" Style="{StaticResource TextBlockMouseEnter}" MouseDown="DelSellsDay_MouseDown">Удалить</TextBlock>
                     </StackPanel>
                 </Grid>
             </StackPanel>

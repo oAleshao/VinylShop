@@ -24,10 +24,11 @@ namespace VinylShop.View
         public Users users { get; set; }
 
 
-      
+
         public MainShopWindow()
         {
             InitializeComponent();
+            ChangeTextAboutSell();
             using (db = new VinylShopContext())
             {
                 AllMusicRecordsInShopListBox.ItemsSource = db.GetListMusic_Records();
@@ -54,7 +55,9 @@ namespace VinylShop.View
         int indxHelpRecord = 0;
         private void AllMusicRecordsInShopListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (BorderBackHelp != 3 && BorderBackHelp != 4)
+            if (BorderBackHelp == 1)
+                BorderBackHelp = 3;
+            else
                 BorderBackHelp = 1;
             using (db = new VinylShopContext())
             {
@@ -77,6 +80,9 @@ namespace VinylShop.View
         /// 0 - главное окно
         /// 1 - характеристики пластинок, найсторки пользователя, выход в основное меню
         /// 2 - корзина 
+        /// 3 - Топ исполнителей
+        /// 4 - Топ жанров
+        /// 
         //Кнопка назад
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -97,17 +103,11 @@ namespace VinylShop.View
                     BorderBackHelp = 1;
                     BagShopStackPanel.Visibility = Visibility.Visible;
                 }
-                else if(BorderBackHelp == 3)
+                else if (BorderBackHelp == 3)
                 {
-                    AllMusicRecordsInShopListBox.ItemsSource = db.GetTopExecutors();
+                    BorderBackHelp = 1;
                     AllMusicRecordsStackPanel.Visibility = Visibility.Visible;
 
-                }
-                else if(BorderBackHelp == 4)
-                {
-                    AllMusicRecordsStackPanel.Visibility = Visibility.Visible;
-
-                    AllMusicRecordsInShopListBox.ItemsSource = db.GetTopGanres();
                 }
             }
         }
@@ -195,7 +195,7 @@ namespace VinylShop.View
         }
 
 
-        
+
         private void ListRecordsForShopShowRecords_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             using (db = new VinylShopContext())
@@ -238,17 +238,17 @@ namespace VinylShop.View
             {
                 db.DelMusicRecordFromShopBag(db.music_Records.Find(indxHelpRecord), users);
                 BorderBackHelp = 2;
-                Border_MouseDown(sender, e);
                 ListRecordsForShop.ItemsSource = db.GetListMusicRecordsForShopBag(users.Id);
+                Border_MouseDown(sender, e);
             }
         }
 
         List<HelpOrders> HelpOrders = new List<HelpOrders>();
         private void AddToOrder_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            using(db = new VinylShopContext())
+            using (db = new VinylShopContext())
             {
-                if(db.music_Records.Find(indxHelpRecord).Quantity == 0)
+                if (db.music_Records.Find(indxHelpRecord).Quantity == 0)
                 {
                     MessageBox.Show("К сожалению данного товара больше нету");
                     return;
@@ -259,22 +259,18 @@ namespace VinylShop.View
                 helper.Quantity = int.Parse(CountTextBlock.Text);
                 helper.music_Records = records;
 
-                foreach(var item in HelpOrders)
+                foreach (var item in HelpOrders)
                 {
-                    MessageBox.Show(item.ToString());
-                    if(db.CompareToMusicRecords(db.music_Records.Find(item.music_Records.Id), records))
+                    if (db.CompareToMusicRecords(db.music_Records.Find(item.music_Records.Id), records))
                     {
-                        MessageBox.Show("WORK");
                         item.Quantity += helper.Quantity;
                         CheckIsList = false;
                     }
                 }
-                records.Quantity -= helper.Quantity;
                 if (CheckIsList)
                 {
                     HelpOrders.Add(helper);
                 }
-                db.SaveChanges();
                 MessageBox.Show("Добавлено в заказы");
             }
         }
@@ -282,6 +278,7 @@ namespace VinylShop.View
         //Сохранение данных пользователя
         private void SaveUserData_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            BorderCanSee_MouseDown(sender, e);
             using (db = new VinylShopContext())
             {
                 users = db.users.Find(users.Id);
@@ -292,21 +289,23 @@ namespace VinylShop.View
                 users.PhoneNumber = PhoneTextBox.Text;
                 users.FullName = FullNameTextBox.Text;
                 db.SaveChanges();
+                SetUser(users);
 
             }
+
         }
 
         private void PlusCountRecords_MouseDown(object sender, MouseButtonEventArgs e)
         {
             using (db = new VinylShopContext())
             {
-               int count = int.Parse(CountTextBlock.Text);
-               Music_Records records = db.music_Records.Find(indxHelpRecord);
-               if(count < records.Quantity)
-               {
+                int count = int.Parse(CountTextBlock.Text);
+                Music_Records records = db.music_Records.Find(indxHelpRecord);
+                if (count < records.Quantity)
+                {
                     count++;
                     CountTextBlock.Text = count.ToString();
-               }
+                }
             }
         }
         private void MinusCountRecords_MouseDown(object sender, MouseButtonEventArgs e)
@@ -328,6 +327,12 @@ namespace VinylShop.View
         {
             using (db = new VinylShopContext())
             {
+                double TotalPriceAllOrders = 0;
+                List<Music_Records> knowAboutSell = db.SearchMusicRecordsByGanre(db.ganreMusics.Find(IdGanreForSell).Name);
+                List<Orders> list = db.orders.Where(x => x.Iduser.Id == users.Id).ToList();
+                if (list.Count != 0)
+                    TotalPriceAllOrders = db.orders.Where(x => x.Iduser.Id == users.Id).Sum(x => x.TotalPrice);
+
                 IsAllStackPanelVisibilityFalse();
                 MakeOrderStackPanel.Visibility = Visibility.Visible;
                 BorderBackHelp = 2;
@@ -336,6 +341,47 @@ namespace VinylShop.View
                 PhoneOrderTextBox.Text = users.PhoneNumber;
                 AdressOrderTextBox.Text = users.Adres;
                 EmailOrderTextBox.Text = users.Email;
+                double temp = 0;
+                bool helper = true;
+                bool helperForPersent = false;
+                if (TotalPriceAllOrders > 15000)
+                {
+                    PriceSellTextBox.Text = "Скидка 10%";
+                    helperForPersent = true;
+                }
+                foreach (var price in HelpOrders)
+                {
+                    foreach (var Mrecord in knowAboutSell)
+                    {
+                        if (price.music_Records.Id == Mrecord.Id)
+                        {
+                            MessageBox.Show(Mrecord.ToString());
+                            temp += price.music_Records.Price * price.Quantity - ((price.music_Records.Price * price.Quantity) * (AmountSellToday / 100));
+                            helper = false;
+                            if (helperForPersent)
+                            {
+                                PriceSellTextBox.Text = $"Скидка 10% + {AmountSellToday}% на жанр {db.ganreMusics.Find(IdGanreForSell).Name}";
+                            }
+                            else
+                            {
+                                PriceSellTextBox.Text = $"Скидка {AmountSellToday}% на жанр {db.ganreMusics.Find(IdGanreForSell).Name}";
+                            }
+                            break;
+                        }
+                    }
+                    if (helper)
+                    {
+                        temp += price.music_Records.Price * price.Quantity;
+                        MessageBox.Show(temp.ToString());
+                        continue;
+                    }
+                    MessageBox.Show(temp.ToString());
+                    helper = true;
+                }
+                if (TotalPriceAllOrders > 15000)
+                    temp = temp - temp * 0.10;
+
+                TotalPriceTextBox.Text = "Общая стоимость: " + temp.ToString() + " грн";
                 ListOrders.ItemsSource = null;
                 ListOrders.ItemsSource = HelpOrders;
             }
@@ -355,10 +401,11 @@ namespace VinylShop.View
                 }
                 Orders newOrder = new Orders();
                 newOrder.dateOrder = DateTime.Now;
-                foreach(var records in HelpOrders)
+                foreach (var records in HelpOrders)
                 {
                     records.music_Records = db.music_Records.Find(records.music_Records.Id);
-                    newOrder.TotalPrice += records.music_Records.Price*records.Quantity;
+                    newOrder.TotalPrice += records.music_Records.Price * records.Quantity;
+                    records.music_Records.Quantity -= records.Quantity;
                     newOrder.helpOrders_.Add(records);
                 }
                 newOrder.Iduser = db.users.Find(users.Id);
@@ -368,13 +415,14 @@ namespace VinylShop.View
                 ListOrders.ItemsSource = null;
                 MessageBox.Show("Заказ успешно оформлен");
                 BorderBackHelp = 1;
+                PriceSellTextBox.Text = string.Empty;
                 Border_MouseDown(sender, e);
             }
         }
 
         private void ListBoxHistoryOrdered_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            using(db = new VinylShopContext())
+            using (db = new VinylShopContext())
             {
                 Orders order = (Orders)ListBoxHistoryOrdered.SelectedItem;
                 if (order != null)
@@ -412,7 +460,7 @@ namespace VinylShop.View
             using (db = new VinylShopContext())
             {
                 BorderBackHelp = 1;
-                AllMusicRecordsInShopListBox.ItemsSource  = db.GetTopSellMusicRecords();
+                AllMusicRecordsInShopListBox.ItemsSource = db.GetTopSellMusicRecords();
             }
         }
 
@@ -420,8 +468,8 @@ namespace VinylShop.View
         {
             using (db = new VinylShopContext())
             {
-                BorderBackHelp = 3;
-                AllMusicRecordsInShopListBox.ItemsSource =  db.GetTopExecutors();
+                BorderBackHelp = 1;
+                AllMusicRecordsInShopListBox.ItemsSource = db.GetTopExecutors();
             }
         }
 
@@ -429,8 +477,113 @@ namespace VinylShop.View
         {
             using (db = new VinylShopContext())
             {
-                BorderBackHelp = 4;
+                BorderBackHelp = 1;
                 AllMusicRecordsInShopListBox.ItemsSource = db.GetTopGanres();
+            }
+        }
+
+
+
+
+        private void SearchGlass_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Search();
+        }
+
+        private void SearchString_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(Key.Enter == e.Key)
+            {
+                Search();
+            }
+        }
+
+        private void Search()
+        {
+            if (SearchString.Text == string.Empty)
+                return;
+            using (db = new VinylShopContext())
+            {
+                BorderBackHelp = 1;
+                if (SearchName.IsChecked == true)
+                {
+                    AllMusicRecordsInShopListBox.ItemsSource = db.SearchMusicRecordsByName(SearchString.Text);
+                }
+                else if(SearchPublish.IsChecked == true)
+                {
+                    AllMusicRecordsInShopListBox.ItemsSource = db.SearchMusicRecordsByPublish(SearchString.Text);
+                }
+                else if(SearchExecutor.IsChecked == true)
+                {
+                    AllMusicRecordsInShopListBox.ItemsSource = db.SearchMusicRecordsByExecutor(SearchString.Text);
+                }
+                else if(SearchGanre.IsChecked == true)
+                {
+                    AllMusicRecordsInShopListBox.ItemsSource = db.SearchMusicRecordsByGanre(SearchString.Text);
+                }
+            }
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            using (db = new VinylShopContext())
+            {
+                users = db.users.Find(users.Id);
+                users.Adres = AdressOrderTextBox.Text;
+                db.SaveChanges();
+                SetUser(users);
+            }
+        }
+
+        private void UserPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            UserPassword.Text = UserPasswordBox.Password;
+        }
+
+        int IdGanreForSell = 0;
+        double AmountSellToday = 0;
+        private void ChangeTextAboutSell()
+        {
+            using (db = new VinylShopContext())
+            {
+                var temp = db.sellsDay.Where(x => x.startDayForSell.Day == DateTime.Now.Day &&
+                x.startDayForSell.Month == DateTime.Now.Month && x.startDayForSell.Year == DateTime.Now.Year).Take(1);
+                SellsDay day = temp.FirstOrDefault();
+                if (day != null)
+                {
+                    IdGanreForSell = day.ganre.Id;
+                    AmountSellToday = day.Sell;
+                    TextAboutSells.Text = $"С {day.startDayForSell.ToShortDateString()} по {day.endDayForSell.ToShortDateString()} акция {day.Sell}% на жанр {day.ganre.Name}!!!";
+                }
+            }
+        }
+
+        private void DelFromOrder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            using (db = new VinylShopContext())
+            {
+                foreach(var helpOrder in ListOrders.SelectedItems)
+                {
+                    DelHelpOrdersFromList(ref HelpOrders, (HelpOrders)helpOrder);
+                }
+                ListOrders.ItemsSource = null;
+                MakeOrder_MouseDown(sender, e);
+            }
+
+        }
+
+        private void DelHelpOrdersFromList(ref List<HelpOrders> listHelps, HelpOrders help)
+        {
+            using (db = new VinylShopContext())
+            {
+                foreach (var helpOrder in listHelps)
+                {
+                    if(db.CompareToHelpOrders(helpOrder, help))
+                    {
+                        listHelps.Remove(helpOrder);
+                        break;
+                    }
+                }
             }
         }
     }

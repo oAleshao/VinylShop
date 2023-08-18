@@ -121,11 +121,13 @@
     <Compile Include="Migrations\202308162101005_AddTotalPrice.designer.cs">
       <DependentUpon>202308162101005_AddTotalPrice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308171906201_SellDaysTable.cs" />
+    <Compile Include="Migrations\202308171906201_SellDaysTable.designer.cs">
+      <DependentUpon>202308171906201_SellDaysTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\HelpOrders.cs" />
-    <Compile Include="View\AdminEnterWindow.xaml.cs">
-      <DependentUpon>AdminEnterWindow.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Model\SellsDay.cs" />
     <Compile Include="View\AdminWindow.xaml.cs">
       <DependentUpon>AdminWindow.xaml</DependentUpon>
     </Compile>
@@ -149,10 +151,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\AdminEnterWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\AdminWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -214,6 +212,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308162101005_AddTotalPrice.resx">
       <DependentUpon>202308162101005_AddTotalPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308171906201_SellDaysTable.resx">
+      <DependentUpon>202308171906201_SellDaysTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

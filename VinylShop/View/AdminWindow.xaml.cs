@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,8 +21,10 @@ namespace VinylShop.View
         {
             InitializeComponent();
             AddComboBoxItems();
+            AddDateToComboBox();
             IsVisibilityFalseAllStackPanel();
             BackgroundFone.Visibility = Visibility.Visible;
+
         }
 
 
@@ -54,9 +57,11 @@ namespace VinylShop.View
             OneGanreAddStackPanel.Visibility = Visibility.Hidden;
             FewGanresAddStackPanel.Visibility = Visibility.Hidden;
             ComboBoxPublishHouseEdit.Visibility = Visibility.Hidden;
+            AddSellDayStackPanel.Visibility = Visibility.Hidden;
+            DelSellDayStackPanel.Visibility = Visibility.Hidden;
         }
 
-         
+
         string[] SearchRecord = { "Пластинку", "Пластинку по издательству" }; // Строка для поиска пластинок
         string[] SearchSong = { "Песню", "Песню по жанру", "Песню по исполнителю" }; // Строка для поиска песен
         string[] SearchGanreAndExecutor = { "Исполнителя", "Жанр" };
@@ -76,7 +81,7 @@ namespace VinylShop.View
         //Заполнение всех основных комбоБоксов
         private void AddComboBoxItems()
         {
-            string[] strings = { "Пластинку", "Песню", "Жанр", "Издательство", "Исполнителя" };
+            string[] strings = { "Пластинку", "Песню", "Жанр", "Издательство", "Исполнителя", "Акцию"};
             ComboBoxAdd.ItemsSource = strings;
             ComboBoxDel.ItemsSource = strings;
             ComboBoxEdit.ItemsSource = strings;
@@ -85,9 +90,33 @@ namespace VinylShop.View
             ComboBoxEdit.IsEnabled = false;
         }
 
-        //ЧекБоксы для (Редактирования/Добавления/Удаления)
+        private void AddDateToComboBox()
+        {
+            for(int i = 1;i <= 31;i++)
+            {
+                ddStart.Items.Add(i);
+                ddEnd.Items.Add(i);
+                if (i < 13)
+                {
+                    mmStart.Items.Add(i);
+                    mmEnd.Items.Add(i);
+                }
+            }
+
+            for(int i = DateTime.Now.Year; i < 2100; i++)
+            {
+                yyStart.Items.Add(i);
+                yyEnd.Items.Add(i);
+            }
+
+
+        }
+
+        //РадиоБатоны для (Редактирования/Добавления/Удаления)
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
+            BackgroundFone.Visibility = Visibility.Visible;
+
             ComboBoxAdd.Text = string.Empty;
             ComboBoxDel.Text = string.Empty;
             ComboBoxEdit.Text = string.Empty;
@@ -169,6 +198,7 @@ namespace VinylShop.View
                 admin.IsEnabled = true;
                 AdminNameTextBox.Text = admin.login;
                 db.SaveChanges();
+                MessageBox.Show("Данные изменены");
             }
         }
 
@@ -183,7 +213,11 @@ namespace VinylShop.View
             {
                 db.admins.Add(newAdmin);
                 db.SaveChanges();
+                MessageBox.Show("Админ добавлен");
+                NameNewAdmin.Text = string.Empty;
+                PassNewAdmin.Text = string.Empty;
             }
+
         }
 
 
@@ -193,15 +227,21 @@ namespace VinylShop.View
         //Выборка стек панелей через комбо бокс (Добавление)
         private void ComboBoxAdd_Selected(object sender, SelectionChangedEventArgs e)
         {
+
             IsVisibilityFalseAllStackPanel();
+
             using (db = new VinylShopContext())
             {
                 ComboBoxSearchHelp.ItemsSource = null;
                 switch (ComboBoxAdd.SelectedIndex)
                 {
+                    case -1:
+                        BackgroundFone.Visibility = Visibility.Visible;
+                        break;
                     case 0:
                         AddMusicRecordStackPanel.Visibility = Visibility.Visible;
-                        SongsListBoxForRecords.ItemsSource = db.GetSongs();
+                        SongsListBoxForRecords.ItemsSource = db.GetListSongs().Take(15);
+                        SongsListBoxForRecords.ToolTip = "Введите в поиске песню чтобы добваить";
                         ComboBoxPublishHouse.ItemsSource = db.pubishHouses.ToList();
                         ComboBoxSearchHelp.Items.Clear();
                         ComboBoxSearchHelp.ItemsSource = SearchSong;
@@ -226,7 +266,13 @@ namespace VinylShop.View
                         AddExecutorStackPanel.Visibility = Visibility.Visible;
                         ExecutorsListBox.ItemsSource = db.executorMusics.ToList();
                         break;
-
+                    case 5:
+                        AddSellDayStackPanel.Visibility = Visibility.Visible;
+                        GanreComboBoxForSell.ItemsSource = db.ganreMusics.ToList();
+                        NameSellDayTextBlock.Text = "Добавления акционных дней";
+                        AddOrSaveTextBlockSellsDay.Text = "Добавить";
+                        HelperForSell = 0;
+                        break;
                 }
             }
 
@@ -277,6 +323,9 @@ namespace VinylShop.View
         }
 
         //Добавление нового трека 
+
+        List<ExecutorMusic> ListExecutors { get; set; } = new List<ExecutorMusic>();
+        List<GanreMusic> ListGanres { get; set; } = new List<GanreMusic>();
         private void AddSong_MouseDown(object sender, MouseButtonEventArgs e)
         {
             using (db = new VinylShopContext())
@@ -286,13 +335,27 @@ namespace VinylShop.View
                 if (FewGanresCheckBox.IsChecked != true)
                     song.ganreMusics = db.GetListGanre((GanreMusic)AddComboBoxGanreFromSong.SelectedItem);
                 else
-                    song.ganreMusics = db.GetListGanre(ListGanres);
-
+                {
+                    foreach (var ganre in ListBoxAddGanresToSongs.SelectedItems)
+                    {
+                        if (!CheckGanreIsList(db.GetGanre((GanreMusic)ganre).Id, song.ganreMusics.ToList()))
+                        {
+                            song.ganreMusics.Add(db.ganreMusics.Find(db.GetGanre((GanreMusic)ganre).Id));
+                        }
+                    }
+                }
                 if (FewExecutorsCheckBox.IsChecked != true)
                     song.executorMusics = db.GetListExecutors((ExecutorMusic)AddComboBoxExecutorFromSong.SelectedItem);
                 else
-                    song.executorMusics = db.GetListExecutors(ListExecutors);
-
+                {
+                    foreach (var executor in ListBoxAddExecutorsToSongs.SelectedItems)
+                    {
+                        if (!CheckExecutorIsList(db.GetExecutors((ExecutorMusic)executor).Id, song.executorMusics.ToList()))
+                        {
+                            song.executorMusics.Add(db.executorMusics.Find(db.GetExecutors((ExecutorMusic)executor).Id));
+                        }
+                    }
+                }
                 db.songs.Add(song);
                 db.SaveChanges();
                 ListGanres.Clear();
@@ -356,16 +419,12 @@ namespace VinylShop.View
 
 
         // Добавление в лист исполнителей
-        List<ExecutorMusic> ListExecutors { get; set; } = new List<ExecutorMusic>();
         private void AddFewExecutorsForSongs_MouseDown(object sender, MouseButtonEventArgs e)
         {
             using (db = new VinylShopContext())
             {
-                ExecutorMusic executor = (ExecutorMusic)ListBoxAddExecutorsToSongs.SelectedItem;
-                if (!CheckExecutorIsList(executor.Id, ListExecutors))
-                {
-                    ListExecutors.Add(db.executorMusics.Find(executor.Id));
-                }
+               
+                MessageBox.Show("Все исполнители успешно добавлены");
             }
         }
         //Наличие исполнителя в листе
@@ -383,16 +442,12 @@ namespace VinylShop.View
 
 
         //Добавление в лист жанров
-        List<GanreMusic> ListGanres { get; set; } = new List<GanreMusic>();
         private void AddFewGanresForSongs_MouseDown(object sender, MouseButtonEventArgs e)
         {
             using (db = new VinylShopContext())
             {
-                GanreMusic ganre = (GanreMusic)ListBoxAddGanresToSongs.SelectedItem;
-                if (!CheckGanreIsList(ganre.Id, ListGanres))
-                {
-                    ListGanres.Add(db.ganreMusics.Find(ganre.Id));
-                }
+               
+                MessageBox.Show("Все жанры успешно добавлены");
             }
         }
         //Наличие жанров в листе
@@ -415,7 +470,10 @@ namespace VinylShop.View
         {
             using (db = new VinylShopContext())
             {
-                records.songs.Add(db.GetSong((Songs)SongsListBoxForRecords.SelectedItem));
+                foreach (var item in SongsListBoxForRecords.SelectedItems)
+                {
+                    records.songs.Add(db.GetSong((Songs)item));
+                }
                 CountSongsInRecord.Text = records.songs.Count.ToString();
             }
         }
@@ -436,6 +494,10 @@ namespace VinylShop.View
                 if (double.TryParse(PriceMusicRecord.Text, out tempPrice))
                     records.Price = tempPrice;
 
+                int tempQuantity;
+                if(int.TryParse(QuantityRecords.Text, out tempQuantity))
+                    records.Quantity = tempQuantity;
+
                 records.songs = db.GetSongsForRecord(records.songs.ToList());
                 records.CountSongs = records.songs.Count;
 
@@ -449,6 +511,9 @@ namespace VinylShop.View
                 ComboBoxPublishHouse.Text = string.Empty;
                 CountSongsInRecord.Text = string.Empty;
                 PriceMusicRecord.Text = string.Empty;
+                QuantityRecords.Text = string.Empty;
+                SongsListBoxForRecords.ItemsSource = db.GetListSongs().Take(15);
+                MessageBox.Show("Добавлено");
             }
         }
 
@@ -469,6 +534,9 @@ namespace VinylShop.View
                 ComboBoxSearchHelp.Items.Clear();
                 switch (ComboBoxEdit.SelectedIndex)
                 {
+                    case -1:
+                        BackgroundFone.Visibility = Visibility.Visible;
+                        break;
                     case 0:
                         EditMusicRecordStackPanel.Visibility = Visibility.Visible;
                         TextBoxPublishHouseEdit.Visibility = Visibility.Visible;
@@ -498,6 +566,15 @@ namespace VinylShop.View
                         EditExecutorStackPanel.Visibility = Visibility.Visible;
                         ExecutorListBox.ItemsSource = db.executorMusics.ToList();
                         break;
+                    case 5:
+                        AddSellDayStackPanel.Visibility = Visibility.Visible;
+                        NameSellDayTextBlock.Text = "Редактирование акционных дней";
+                        AddOrSaveTextBlockSellsDay.Text = "Сохранить изменения";
+                        GanreComboBoxForSell.ItemsSource = db.ganreMusics.ToList();
+                        ListAllSellsDay.ItemsSource = db.GetListSellsDay();
+                        HelperForSell = 1;
+                        break;
+
                 }
             }
         }
@@ -912,6 +989,7 @@ namespace VinylShop.View
                     YearRecordEdit.Text = Records.Year.ToString();
                     DescriptionRecordEdit.Text = Records.Description;
                     TextBoxPublishHouseEdit.Text = Records.pubishHouse.Name;
+                    QuantityEdit.Text = Records.Quantity.ToString();
                     PriceMusicRecordsEditTextBox.Text = Records.Price.ToString();
                     Records.songs = db.GetListSongs(Records.songs.ToList());
                     SongsListBoxForRecordsEdit.ItemsSource = Records.songs.ToList();
@@ -930,19 +1008,19 @@ namespace VinylShop.View
         {
             using (db = new VinylShopContext())
             {
-                Songs song = (Songs)SongsListBoxForRecordsEdit.SelectedItem;
-                if (song != null)
+                Records = db.music_Records.Find(indxMusicRecordHelp);
+                Records.songs = db.GetListSongs(Records.songs.ToList());
+                foreach (var song in SongsListBoxForRecordsEdit.SelectedItems)
                 {
-                    Records = db.music_Records.Find(indxMusicRecordHelp);
-                    Records.songs = db.GetListSongs(Records.songs.ToList());
-                    Records.songs.Add(db.GetSong(db.songs.Find(song.Id)));
-                    Records.CountSongs = Records.songs.Count;
-                    db.SaveChanges();
-                    listSongsForRecord = db.GetListSongs(Records.songs.ToList());
-                    SongsListBoxForRecordsEdit.ItemsSource = Records.songs.ToList();
-                    AllMusicRecords.ItemsSource = db.GetListMusic_Records();
-                    CheckBoxEditSongs.IsChecked = false;
+                    Records.songs.Add(db.songs.Find((db.GetSong((Songs)song).Id)));
                 }
+                Records.CountSongs = Records.songs.Count;
+                db.SaveChanges();
+                listSongsForRecord = db.GetListSongs(Records.songs.ToList());
+                SongsListBoxForRecordsEdit.ItemsSource = Records.songs.ToList();
+                AllMusicRecords.ItemsSource = db.GetListMusic_Records();
+                CheckBoxEditSongs.IsChecked = false;
+
             }
         }
 
@@ -953,10 +1031,12 @@ namespace VinylShop.View
         {
             using (db = new VinylShopContext())
             {
-                Songs song = (Songs)SongsListBoxForRecordsEdit.SelectedItem;
                 Records = db.music_Records.Find(indxMusicRecordHelp);
                 listSongsForRecord = Records.songs.ToList();
-                DeleteSongFromListForListBox(ref listSongsForRecord, song);
+                foreach (var song in SongsListBoxForRecordsEdit.SelectedItems)
+                {
+                    DeleteSongFromListForListBox(ref listSongsForRecord, db.songs.Find(db.GetSong((Songs)song).Id));
+                }
                 SongsListBoxForRecordsEdit.ItemsSource = db.GetListSongs(listSongsForRecord);
             }
         }
@@ -996,12 +1076,17 @@ namespace VinylShop.View
                 double tempPrice;
                 if(double.TryParse(PriceMusicRecordsEditTextBox.Text, out tempPrice))
                     Records.Price = tempPrice;
+
+                int tempQuantity;
+                if (int.TryParse(QuantityEdit.Text, out tempQuantity))
+                    Records.Quantity = tempQuantity;
+
                 Records.CountSongs = Records.songs.Count;
                 db.SaveChanges();
                 listSongsForRecord.Clear();
                 CheckBoxChangeTextBoxToComboBoxEditRecord.IsChecked = false;
                 AllMusicRecords.ItemsSource = db.GetListMusic_Records();
-
+                MessageBox.Show("Изменения сохранены");
             }
         }
 
@@ -1016,6 +1101,9 @@ namespace VinylShop.View
                 ComboBoxSearchHelp.ItemsSource = null;
                 switch (ComboBoxDel.SelectedIndex)
                 {
+                    case -1:
+                        BackgroundFone.Visibility = Visibility.Visible;
+                        break;
                     case 0:
                         DelMusicRecordStackPanel.Visibility = Visibility.Visible;
                         DelListBoxMusicRecord.ItemsSource = db.GetListMusic_Records();
@@ -1038,6 +1126,11 @@ namespace VinylShop.View
                         DelExecutorStackPanel.Visibility = Visibility.Visible;
                         DelListBoxExecutor.ItemsSource = db.executorMusics.ToList();
                         break;
+                    case 5:
+                        DelSellDayStackPanel.Visibility = Visibility.Visible;
+                        DelListBoxSellsDay.ItemsSource = db.GetListSellsDay();
+                        break;
+
                 }
             } 
         }
@@ -1380,6 +1473,91 @@ namespace VinylShop.View
                     {
                         DelListBoxExecutor.ItemsSource = db.executorMusics.ToList();
                     }
+                }
+            }
+        }
+
+        int HelperForSell = 0;
+        private void AddSellDay_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            using (db = new VinylShopContext())
+            {
+                double temp = 0;
+                DateTime SDate = new DateTime(int.Parse(yyStart.Text), int.Parse(mmStart.Text), int.Parse(ddStart.Text));
+                DateTime EDate = new DateTime(int.Parse(yyEnd.Text), int.Parse(mmEnd.Text), int.Parse(ddEnd.Text));
+                if (SDate > EDate)
+                {
+                    MessageBox.Show("Неправильно введена дата");
+                    return;
+                }
+                if (!double.TryParse(AmountSellTextBox.Text, out temp))
+                {
+                    MessageBox.Show("Неверно введена скидка");
+                    return;
+                }
+                if (HelperForSell == 0)
+                {
+                    SellsDay day = new SellsDay();
+                    day.startDayForSell = SDate;
+                    day.endDayForSell = EDate;
+                    GanreMusic ganre = (GanreMusic)GanreComboBoxForSell.SelectedItem;
+                    day.ganre = db.ganreMusics.Find(ganre.Id);
+                    day.Sell = temp;
+                    db.sellsDay.Add(day);
+                    db.SaveChanges();
+                    MessageBox.Show("Успешно добавлено");
+                    ddEnd.Text = string.Empty; ddStart.Text = string.Empty;
+                    mmEnd.Text = string.Empty; mmStart.Text = string.Empty;
+                    yyEnd.Text = string.Empty; yyStart.Text = string.Empty;
+                    GanreComboBoxForSell.Text = string.Empty;
+                    AmountSellTextBox.Text = string.Empty;
+                }
+                else if(HelperForSell == 1)
+                {
+                    SellsDay day = db.sellsDay.Find(indxHelpSellsDay);
+                    day.startDayForSell = SDate;
+                    day.endDayForSell = EDate;
+                    GanreMusic ganre = (GanreMusic)GanreComboBoxForSell.SelectedItem;
+                    day.ganre = db.ganreMusics.Find(ganre.Id);
+                    day.Sell = temp;
+                    db.SaveChanges();
+                    MessageBox.Show("Успешно сохранено");
+                    ListAllSellsDay.ItemsSource = db.GetListSellsDay();
+                }
+            }
+        }
+        
+        private void DelSellsDay_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            using (db = new VinylShopContext())
+            {
+                SellsDay day = (SellsDay)DelListBoxSellsDay.SelectedItem;
+                db.sellsDay.Remove(db.sellsDay.Find(day.Id));
+                db.SaveChanges();
+                DelListBoxSellsDay.ItemsSource = db.GetListSellsDay();
+            }
+        }
+
+        int indxHelpSellsDay = 0;
+        private void ListAllSellsDay_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            using (db = new VinylShopContext())
+            {
+                SellsDay day = (SellsDay)ListAllSellsDay.SelectedItem;
+                if (day != null)
+                {
+                    day = db.sellsDay.Find(day.Id);
+                    indxHelpSellsDay = day.Id;
+                    MessageBox.Show(day.ToString());
+                    ddStart.Text = day.startDayForSell.Day.ToString();
+                    mmStart.Text = day.startDayForSell.Month.ToString();
+                    yyStart.Text = day.startDayForSell.Year.ToString();
+                    ddEnd.Text = day.endDayForSell.Day.ToString();
+                    mmEnd.Text = day.endDayForSell.Month.ToString();
+                    yyEnd.Text = day.endDayForSell.Year.ToString();
+                    GanreComboBoxForSell.Text = day.ganre.Name.ToString();
+                    AmountSellTextBox.Text = day.Sell.ToString();
+                    
                 }
             }
         }

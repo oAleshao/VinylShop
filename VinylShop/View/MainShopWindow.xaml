@@ -75,8 +75,8 @@
                     </Image.Source>
                 </Image>
             </Border>
-            <TextBox Width="400" Margin="0 0 0 0" materialDesign:HintAssist.Hint="Поиск" Height="30"></TextBox>
-            <Border HorizontalAlignment="Left" Margin="10 0 100 0">
+            <TextBox x:Name="SearchString" Width="400" Margin="0 0 0 0" materialDesign:HintAssist.Hint="Поиск" Height="30" KeyDown="SearchString_KeyDown"></TextBox>
+            <Border HorizontalAlignment="Left" Margin="10 0 100 0" MouseDown="SearchGlass_MouseDown">
                 <Image Width="20" Height="20">
                     <Image.Source>
                         <BitmapImage UriSource="/Logo/SearchGlass.png"></BitmapImage>
@@ -93,8 +93,16 @@
         </StackPanel>
 
 
+        <StackPanel  Grid.Row="0" Grid.RowSpan="3">
+            <TextBlock FontWeight="Bold" Margin="20 140 0 0">Поиск</TextBlock>
+            <RadioButton x:Name="SearchName" Margin="40 15 0 0">Название</RadioButton>
+            <RadioButton x:Name="SearchPublish" Margin="40 15 0 0">Издательство</RadioButton>
+            <RadioButton x:Name="SearchExecutor" Margin="40 15 0 0">Автора</RadioButton>
+            <RadioButton x:Name="SearchGanre" Margin="40 15 0 0">Жанр</RadioButton>
+        </StackPanel>
 
-        <StackPanel  Grid.Row="2" Grid.RowSpan="3">
+
+        <StackPanel  Grid.Row="3" Grid.RowSpan="3">
             <TextBlock FontWeight="Bold" Margin="20 30 0 0">Популярное</TextBlock>
             <TextBlock Margin="40 15 0 0" Style="{StaticResource TextBlockMouseEnter}" MouseDown="NewRecordsInShop_MouseDown">Новинки</TextBlock>
             <TextBlock Margin="40 15 0 0" Style="{StaticResource TextBlockMouseEnter}" MouseDown="TopSell_MouseDown">Самые продаваемые</TextBlock>
@@ -103,7 +111,7 @@
 
         </StackPanel>
 
-        <StackPanel Grid.Row="4" Grid.RowSpan="2">
+        <StackPanel Grid.Row="5" Grid.RowSpan="2">
             <TextBlock x:Name="UsersLoginTextBlock" FontWeight="Bold" Margin="20 30 0 0">Name</TextBlock>
             <TextBlock Margin="40 15 0 0" Style="{StaticResource TextBlockMouseEnter}" MouseDown="HistoryOrdered_MouseDown">История заказов</TextBlock>
             <TextBlock Margin="40 15 0 0" Style="{StaticResource TextBlockMouseEnter}" MouseDown="Settings_MouseDown">Настройки аккаунта</TextBlock>
@@ -111,7 +119,8 @@
         </StackPanel>
 
         <StackPanel x:Name="AllMusicRecordsStackPanel" Grid.Row="2" Grid.Column="1" Grid.RowSpan="7" Visibility="Visible">
-            <ListBox x:Name="AllMusicRecordsInShopListBox" Height="600" Width="750" FontWeight="Bold" SelectionChanged="AllMusicRecordsInShopListBox_SelectionChanged"></ListBox>
+            <TextBlock x:Name="TextAboutSells" HorizontalAlignment="Center" FontSize="16" Foreground="Red"></TextBlock>
+            <ListBox x:Name="AllMusicRecordsInShopListBox" Margin="0 20 0 0" Height="460" Width="750" FontWeight="Bold" SelectionChanged="AllMusicRecordsInShopListBox_SelectionChanged"></ListBox>
         </StackPanel>
 
         <!--Панель для характеристики пластинки-->
@@ -238,7 +247,7 @@
 
 
                 <StackPanel x:Name="CanNotSeeStackPanel" Grid.Row="3" Grid.Column="1" Margin="0" Orientation="Horizontal">
-                    <PasswordBox  x:Name="UserPasswordBox" Width="250" Height="30" materialDesign:HintAssist.Hint="Пароль" Margin="40 0 0 20" ></PasswordBox>
+                    <PasswordBox  x:Name="UserPasswordBox" Width="250" Height="30" materialDesign:HintAssist.Hint="Пароль" Margin="40 0 0 20" PasswordChanged="UserPasswordBox_PasswordChanged"></PasswordBox>
                     <Border Margin="5 0 0 15 " MouseDown="BorderCanNotSee_MouseDown">
                         <Image Height="20" Width="20" x:Name="ImageUserCanNotSee">
                             <Image.Source>
@@ -261,7 +270,7 @@
 
                 <StackPanel Grid.Row="7" Grid.Column="1" Margin="20">
                     <TextBlock Style="{StaticResource TextBlockMouseEnter}" HorizontalAlignment="Center"
-                               MouseDown="SaveUserData_MouseDown">Сохранить</TextBlock>
+                               MouseDown="SaveUserData_MouseDown">Сохранить изменения</TextBlock>
                 </StackPanel>
 
             </Grid>
@@ -326,24 +335,34 @@
                 
                 <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal" Margin="10">
                     <TextBox x:Name="AdressOrderTextBox" Width="250" materialDesign:HintAssist.Hint="Адрес" Margin="65 0 0 10"></TextBox>
-                    <CheckBox Height="13" Margin="15 0 0 0"></CheckBox>
+                    <CheckBox Height="13" Margin="15 0 0 0" Checked="CheckBox_Checked" ToolTip="Сохранить адрес"></CheckBox>
                 </StackPanel>
                 
                 <StackPanel Grid.Row="5" Grid.Column="0" Margin="10">
                     <TextBox x:Name="EmailOrderTextBox" Width="250" materialDesign:HintAssist.Hint="Почта" Margin="0 0 0 10"></TextBox>
                 </StackPanel>
 
-                <StackPanel Grid.Row="2" Grid.Column="1" Grid.RowSpan="5">
-                    <ListBox x:Name="ListOrders" Width="350" Height="250"></ListBox>
+                <StackPanel Grid.Row="2" Grid.Column="1" Grid.RowSpan="4">
+                    <ListBox x:Name="ListOrders" Width="350" Height="250" FontSize="10"
+                             Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineListBox}"></ListBox>
+                    <TextBlock HorizontalAlignment="Center" FontSize="13" FontWeight="Medium" Style="{StaticResource TextBlockMouseEnter}"
+                               Margin="90 0 0 0" Mouse.MouseDown="DelFromOrder_MouseDown">Удалить из заказа</TextBlock>
                 </StackPanel>
 
-                <StackPanel Grid.Row="6" Grid.Column="1">
+                <StackPanel Grid.Row="6" Grid.Column="0" Margin="10">
+                    <TextBlock x:Name="PriceSellTextBox" HorizontalAlignment="Right" FontSize="16"></TextBlock>
+                </StackPanel>
+                
+                <StackPanel Grid.Row="6" Grid.Column="1" Margin="25">
+                    <TextBlock x:Name="TotalPriceTextBox" FontSize="16" HorizontalAlignment="Center">Total price</TextBlock>
+                </StackPanel>
+                
+                <StackPanel Grid.Row="7" Grid.Column="1">
                     <TextBlock Margin="0 40 40 0" HorizontalAlignment="Center" FontWeight="DemiBold" 
                                Style="{StaticResource TextBlockMouseEnter}" MouseDown="MadeOrder_MouseDown">Заказать</TextBlock>
                 </StackPanel>
             </Grid>
         </StackPanel>
-
 
         <StackPanel  x:Name="HistoryOrderStackPanel" Grid.Row="2" Grid.Column="1" Grid.RowSpan="7" Height="560" Visibility="Hidden">
             <Grid>

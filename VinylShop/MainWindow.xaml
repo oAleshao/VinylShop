@@ -22,7 +22,6 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="130"></RowDefinition>
-            <RowDefinition Height="170"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -34,16 +33,51 @@
             </Image>
         </StackPanel>
 
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="250" Grid.Row="1">
-            <TextBox x:Name="loginBox" MaxWidth="240" MaxHeight="40" TextAlignment="Left" FontSize="12" materialDesign:HintAssist.Hint="логин или почта" Margin="7" PreviewKeyDown="passwordBox_KeyDown"></TextBox>
-            <PasswordBox x:Name="passwordBox" MaxWidth="240" MaxHeight="40" FontSize="12" materialDesign:HintAssist.Hint="пароль" Margin="7" KeyDown="passwordBox_KeyDown"></PasswordBox>
-            <Label x:Name="labelTest" Content="Register?" Style="{StaticResource  LabelMouseEnter}" HorizontalAlignment="Center" Mouse.MouseDown="labelTest_MouseDown"></Label>
+        <StackPanel Grid.Row="1">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="0 60 0 0">
+                    <TextBox x:Name="loginBox" MaxWidth="220" MaxHeight="40" TextAlignment="Left" FontSize="12" materialDesign:HintAssist.Hint="Логин или почта" Margin="7" KeyDown="passwordBox_KeyDown"></TextBox>
+                </StackPanel>
+
+                <StackPanel x:Name="CanNotSeeStackPanel" Grid.Row="1" Margin="0 0 0 0" Orientation="Horizontal">
+                    <PasswordBox  x:Name="UserPasswordBox" Width="220" Height="30" materialDesign:HintAssist.Hint="Пароль" Margin="133 0 0 20" KeyDown="passwordBox_KeyDown" PasswordChanged="UserPasswordBox_PasswordChanged"></PasswordBox>
+                    <Border Margin="5 0 0 15 " MouseDown="BorderCanNotSee_MouseDown">
+                        <Image Height="20" Width="20" x:Name="ImageUserCanNotSee">
+                            <Image.Source>
+                                <BitmapImage UriSource="/Logo/EyeCan'tSee.png"></BitmapImage>
+                            </Image.Source>
+                        </Image>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel x:Name="CanSeeStackPanel" Grid.Row="1"  Orientation="Horizontal" Visibility="Hidden">
+                    <TextBox  x:Name="UserPassword" Width="220" Height="30"  materialDesign:HintAssist.Hint="Пароль" Margin="133 0 0 20" KeyDown="passwordBox_KeyDown"></TextBox>
+                    <Border Margin="5 0 0 15" MouseDown="BorderCanSee_MouseDown">
+                        <Image Height="20" Width="20" x:Name="ImageUserCanSee">
+                            <Image.Source>
+                                <BitmapImage UriSource="/Logo/EyeCanSee.png"></BitmapImage>
+                            </Image.Source>
+                        </Image>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3">
+                    <Label x:Name="labelTest" Content="Register?" Style="{StaticResource  LabelMouseEnter}" HorizontalAlignment="Center" Mouse.MouseDown="labelTest_MouseDown"></Label>
+                </StackPanel>
+            </Grid>
+           
+            
         </StackPanel>
 
-        <StackPanel Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Border Height="20" Margin="7" MouseDown="Border_MouseDown">
-                <Image Source="/Logo/шестеренка-removebg-preview.png"></Image>
-            </Border>
-        </StackPanel>
+       
+
     </Grid>
 </Window>

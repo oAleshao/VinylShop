@@ -18,7 +18,7 @@ namespace VinylShop.Model
 
         public override string ToString()
         {
-            return $"Название пластинки: {music_Records.Name} кол-во: {Quantity}";
+            return $"Название: {music_Records.Name} кол-во: {Quantity} Cтоимость: {music_Records.Price* Quantity}";
         }
     }
 }

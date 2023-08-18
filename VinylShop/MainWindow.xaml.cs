@@ -27,12 +27,6 @@ namespace VinylShop
         {
             InitializeComponent();
 
-            MainShopWindow mainShop = new MainShopWindow();
-            using(db = new VinylShopContext())
-            {
-                mainShop.SetUser(db.users.Find(1));
-            }
-            mainShop.ShowDialog();
         }
 
 
@@ -51,86 +45,78 @@ namespace VinylShop
         //Вход пользователя
         private void passwordBox_KeyDown(object sender, KeyEventArgs e)
         {
+
+            if (CanSeeStackPanel.Visibility == Visibility.Visible && e.Key == Key.Enter)
+                BorderCanSee_MouseDown(sender, helpE);
             if (e.Key == Key.Enter)
             {
-                if (loginBox.Text == string.Empty || passwordBox.Password == string.Empty)
+                if (loginBox.Text == string.Empty || UserPasswordBox.Password == string.Empty)
                     return;
                 using (db = new VinylShopContext())
                 {
-                    Users users = db.CheckUserLogAndEmail(loginBox.Text);
-                    if (users == null)
+                    Admins admin = db.CheckAdminLogin(loginBox.Text);
+                    if (admin != null)
                     {
-                        loginBox.Foreground = Brushes.Red;
-                        loginBox.ToolTip = "Такого пользователя не найдено";
-                        return;
+                        if (admin.password != UserPasswordBox.Password)
+                        {
+                            UserPasswordBox.Foreground = Brushes.Red;
+                            UserPasswordBox.ToolTip = "Пароль введен не верно";
+                            return;
+                        }
+                        else
+                        {
+                            UserPasswordBox.Foreground = Brushes.Black;
+                            UserPasswordBox.ToolTip = null;
+                        }
+                        OpenAdminWindow(admin);
                     }
                     else
                     {
-                        loginBox.Foreground = Brushes.Black;
-                        loginBox.ToolTip = null;
-                    }
-                    if (users.Password != passwordBox.Password)
-                    {
-                        passwordBox.Foreground = Brushes.Red;
-                        passwordBox.ToolTip = "Пароль введен не верно";
-                        return;
-                    }
-                    else
-                    {
-                        passwordBox.Foreground = Brushes.Black;
-                        passwordBox.ToolTip = null;
-                    }
+                        Users users = db.CheckUserLogAndEmail(loginBox.Text);
+                        if (users == null)
+                        {
+                            loginBox.Foreground = Brushes.Red;
+                            loginBox.ToolTip = "Такого пользователя не найдено";
+                            return;
+                        }
+                        else
+                        {
+                            loginBox.Foreground = Brushes.Black;
+                            loginBox.ToolTip = null;
+                        }
+                        if (users.Password != UserPasswordBox.Password)
+                        {
+                            UserPasswordBox.Foreground = Brushes.Red;
+                            UserPasswordBox.ToolTip = "Пароль введен не верно";
+                            return;
+                        }
+                        else
+                        {
+                            UserPasswordBox.Foreground = Brushes.Black;
+                            UserPasswordBox.ToolTip = null;
+                        }
 
-                    users = db.users.Find(users.Id);
+                        users = db.users.Find(users.Id);
 
-                    MainShopWindow mainShop = new MainShopWindow();
-                    mainShop.SetUser(users);
-                    this.Visibility = Visibility.Hidden;
+                        MainShopWindow mainShop = new MainShopWindow();
+                        mainShop.SetUser(users);
+                        this.Visibility = Visibility.Hidden;
+                        var temp = mainShop.ShowDialog();
+                        if (temp == false)
+                        {
+                            this.Visibility = Visibility.Visible;
+                        }
+                    }
                     loginBox.Text = string.Empty;
-                    passwordBox.Password = string.Empty;
-                    var temp = mainShop.ShowDialog();
-                    if (temp == false)
-                    {
-                        this.Visibility = Visibility.Visible;
-                    }
+                    UserPasswordBox.Password = string.Empty;
 
                 }
             }
         }
 
 
-        //Вход Админа
-        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-
-            Admins admins = null;
-            using (db = new VinylShopContext())
-            {
-                foreach(var admin in db.admins)
-                {
-                    if(admin.IsEnabled == true)
-                    {
-                        admins = admin;
-                        break;
-                    }
-                }
-                if (admins != null)
-                {
-                    OpenAdminWindow(admins);
-                }
-                else
-                {
-                    AdminEnterWindow enterWindow = new AdminEnterWindow();
-                    enterWindow.ShowDialog();
-                    if (enterWindow.admins != null)
-                    {
-                        OpenAdminWindow(enterWindow.admins);
-                    }
-                }
-            }
 
 
-        }
         private void OpenAdminWindow(Admins admin)
         {
             AdminWindow adminWindow = new AdminWindow();
@@ -142,5 +128,25 @@ namespace VinylShop
                 this.Visibility = Visibility.Visible;
             }
         }
+
+        MouseButtonEventArgs helpE;
+        private void UserPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            UserPassword.Text = UserPasswordBox.Password;
+        }
+
+        private void BorderCanNotSee_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            CanNotSeeStackPanel.Visibility = Visibility.Hidden;
+            CanSeeStackPanel.Visibility = Visibility.Visible;
+            helpE = e;
+        }
+        private void BorderCanSee_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            CanSeeStackPanel.Visibility = Visibility.Hidden;
+            CanNotSeeStackPanel.Visibility = Visibility.Visible;
+            UserPasswordBox.Password = UserPassword.Text;
+        }
+
     }
 }

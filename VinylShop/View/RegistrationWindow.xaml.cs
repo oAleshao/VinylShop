@@ -123,7 +123,9 @@ namespace VinylShop.View
         private void PasswordTBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             RePasswordTBox.Foreground = Brushes.Black;
-            if (PasswordTBox.Password != RePasswordTBox.Password && RePasswordTBox.Password!= string.Empty)
+            if (PasswordTBox.Password == string.Empty || RePasswordTBox.Password == string.Empty)
+                return;
+                if (PasswordTBox.Password != RePasswordTBox.Password && RePasswordTBox.Password!= string.Empty)
             {
                 ButReg.IsEnabled = false;
                 RePasswordTBox.Foreground = Brushes.Red;

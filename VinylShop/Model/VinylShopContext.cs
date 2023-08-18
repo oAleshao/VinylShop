@@ -27,6 +27,7 @@ namespace VinylShop.Model
         public DbSet<Users> users { get; set; }
         public DbSet<Admins> admins { get; set; }
         public DbSet<HelpOrders> helpOrders { get; set; }
+        public DbSet<SellsDay> sellsDay { get; set; }
 
         public VinylShopContext() : base("DbVinylShop") { }
 
@@ -176,7 +177,6 @@ namespace VinylShop.Model
             return list;
         }
 
-
         public Songs GetSong(Songs song)
         {
             song = songs.Find(song.Id);
@@ -184,7 +184,6 @@ namespace VinylShop.Model
             Entry(song).Collection("executorMusics").Load();
             return song;
         }
-
 
         public PubishHouse GetPubishHouse(PubishHouse temp)
         {
@@ -306,6 +305,54 @@ namespace VinylShop.Model
                     list.Add(record);
                 }
             }
+            return list;
+        }
+
+        public List<Music_Records> SearchMusicRecordsByExecutor(string searchStr)
+        {
+            List<ExecutorMusic> executors = SearchByExecutors(searchStr);
+            List<Music_Records> list = new List<Music_Records>();
+
+            foreach(var executor in executors)
+            {
+                foreach (var song in executor.songs)
+                {
+                    foreach(var record in song.music_Records)
+                    {
+                        Entry(record).Reference("pubishHouse").Load();
+                        if (!IsMusicRecordInList(list, record))
+                        {
+                            list.Add(record);
+                        }
+                    }
+                }
+            }
+
+
+            return list;
+        }
+
+        public List<Music_Records> SearchMusicRecordsByGanre(string searchStr)
+        {
+            List<GanreMusic> ganres = SearchByGanres(searchStr);
+            List<Music_Records> list = new List<Music_Records>();
+
+            foreach (var ganre in ganres)
+            {
+                foreach (var song in ganre.songs)
+                {
+                    foreach (var record in song.music_Records)
+                    {
+                        Entry(record).Reference("pubishHouse").Load();
+                        if (!IsMusicRecordInList(list, record))
+                        {
+                            list.Add(record);
+                        }
+                    }
+                }
+            }
+
+
             return list;
         }
 
@@ -513,6 +560,18 @@ namespace VinylShop.Model
             return false;
         }
 
+        public HelpOrders GetHelpOrders(HelpOrders help)
+        {
+            help = helpOrders.Find(help.Id);
+            Entry(help).Reference("music_Records").Load();
+            return help;
+        }
+
+        public bool CompareToHelpOrders(HelpOrders first, HelpOrders second)
+        {
+            return first.Quantity == second.Quantity && first.music_Records.Name == second.music_Records.Name;
+        }
+
         public List<Orders> GetListOrders(Users user)
         {
             List<Orders> list = new List<Orders>();
@@ -527,7 +586,6 @@ namespace VinylShop.Model
             }
             return list;
         }
-
 
         public List<HelpOrders> GetListHelpOrders(Orders order)
         {
@@ -620,6 +678,16 @@ namespace VinylShop.Model
             return list;
         }
 
+        public List<SellsDay> GetListSellsDay()
+        {
+            List<SellsDay> list = new List<SellsDay>();
+            foreach (var item in sellsDay.ToList())
+            {
+                Entry(item).Reference("ganre").Load();
+                list.Add(item);
+            }
+            return list;
+        }
     }
 
 
